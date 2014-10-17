@@ -1,0 +1,908 @@
+body {
+	margin: 0;
+	font-family: carto, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+html {
+    overflow-y: scroll !important;
+}
+
+a {
+	text-decoration: none !important;
+    color: inherit;
+}
+
+ul {
+	margin: 0px;
+	list-style: none;
+}
+
+label {
+    outline: none;
+}
+
+@font-face {
+    font-family: carto;
+    src: url("/public/font/CartoGothicStd-Book.woff");
+}
+
+.lifted {
+	z-index: 21
+}
+
+#header label,
+#header li {
+	/*Make the text unselectable*/
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.invisible {
+	opacity: 0
+}
+
+.italic {
+	font-style: italic
+}
+
+.gone {
+	display: none !important
+}
+
+.modal-btn-done {
+    margin-top: 10px;
+    text-align: right
+}
+
+.uk-form-controls input,
+.uk-form-controls select {
+    width: 100%
+}
+
+/*************************/
+
+#paste-json {
+	width: 400px;
+	top: calc(50% - 150px);
+	left: calc(50% - 195px);
+}
+
+#paste-json-data,
+#modal-json-viewer #json-area {
+	display: block;
+	width: 100% !important;
+	height: 400px !important;
+}
+
+#json-area {
+	width: 100%;
+	resize: vertical;
+	height: 400px;
+}
+
+#welcome-title {
+	position: absolute;
+	font-size: 22px;
+	color: #cccccc;
+	width: 100%;
+	text-align: center;
+	top: 50%;
+}
+
+#header {
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: 19
+}
+
+#title-bar {
+	background-color: #eeeeee;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	color: #555555;
+}
+
+#title-bar-content,
+#nav-bar,
+#editor {
+	width: 90%;
+	margin: auto
+}
+
+#nav-bar-content a {
+    color: white
+}
+
+#chelada-title {
+	font-size: 25px
+}
+
+/* Drop down menu style */
+.visible {
+	opacity: 1 !important;
+	visibility: visible !important;
+}
+
+#share ul {
+	visibility: hidden;
+	opacity: 0;
+	position: absolute;
+	list-style: none;
+	white-space: nowrap;
+	background-color: white;
+	padding: 0px;
+	border: 1px solid black;
+	margin-left: -10px
+}
+
+#share li {
+	padding: 5px 10px 5px 10px;
+	font-weight: 700;
+	line-height: 24px
+}
+
+i.edit,
+i.can-delete,
+i.confirm,
+i.settings {
+	margin-right: 0px;
+	padding-right: 0px;
+	height: 15px;
+	margin-left: 10px;
+    visibility: hidden;
+}
+
+i.edit {
+	visibility: hidden;
+}
+
+i.can-delete {
+	visibility: hidden;
+}
+
+i.edit:hover,
+i.confirm:hover,
+i.can-delete:hover,
+i.settings:hover {
+	opacity: 0.5;
+}
+
+.can-editbox, .task-editbox {
+	height: 17px;
+	font-size: 13px;
+}
+/**********************/
+
+#save-can,
+#new-can,
+#edit-cans,
+#share,
+#import-json,
+.dialog-submit,
+#task-name-caption,
+#active-task-name {
+	display: inline-block;
+}
+
+#save-can,
+#new-can,
+#edit-cans,
+#share,
+#import-json,
+#task-name-caption,
+#active-task-name {
+	/* height: 100%; this makes a mess */
+	line-height: 30px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+#edit-cans img,
+#save-can img,
+#new-can img,
+#share img,
+#import-json img {
+	padding-right: 3px
+}
+
+#edit-cans {
+	background-color: #826081;
+}
+
+#edit-cans img {
+	content: url("../images/pencil.png");
+}
+
+#edit-cans:hover {
+	background-color: #999999;
+}
+
+#save-can {
+	background-color: #357087;
+}
+
+#save-can img {
+	content: url("../images/arrow.png");
+}
+
+#save-can:hover {
+	background-color: #666666;
+}
+
+#new-can {
+	background-color: #3f3f3f;
+}
+
+#new-can img {
+	content: url("../images/plus.png");
+}
+
+#new-can:hover {
+	background-color: #666666;
+}
+
+#task-name-caption {
+	background-color: #999999
+}
+
+#active-task-name {
+	color: #999999;
+	font-weight: 700
+}
+
+#import-json {
+	background-color: #357087;
+	float: right;
+}
+
+#import-json img {
+	content: url("../images/right-arrow.png");
+}
+
+#import-json:hover {
+	background-color: #999999
+}
+
+#share {
+	float: right;
+	background-color: #3f3f3f;
+}
+
+#share img {
+	content: url("../images/share.png")
+}
+
+#share:hover {
+	background-color: #555555
+}
+
+#share:hover ul {
+	visibility: visible;
+	opacity: 0.8
+}
+
+#share ul li a {
+	color: #555555;
+	font-size: 14px
+}
+
+/* Editor Styles */
+#editor {
+	margin-top: 90px;
+	min-height: 800px;
+	display: table;
+}
+
+#cans-browser {
+	width: 340px;
+	display: table-cell;
+	position: relative;
+	vertical-align: top
+}
+
+.can,
+#managing-cans {
+	border: 1px solid #dddddd;
+	margin-top: -1px;
+	background-color: #f5f5f5;
+	padding: 10px 10px;
+	opacity: 0.8;
+	color: #333333;
+	min-width: 170px;
+	z-index: 17
+}
+
+.can .can-title {
+	font-weight: 700;
+	font-size: 1.1em;
+	margin-bottom: 10px
+}
+
+.can .arrow {
+	float: right;
+	color: inherit;
+}
+
+.can:hover .settings {
+    visibility: visible;
+}
+
+#managing-cans {
+	margin-top: 20px
+}
+
+#managing-cans a {
+	color: inherit;
+}
+
+#managing-cans div {
+	font-weight: 700;
+}
+
+.tasks,
+#managing-cans ul {
+	margin-bottom: 10px;
+	margin-top: 10px;
+	padding: 0px
+}
+
+.task,
+.shared-can {
+	padding: 5px;
+	padding-left: 15px;
+}
+
+.new-task {
+	font-weight: 700;
+	font-size: 14px
+}
+
+.task {
+	font-size: 15px;
+}
+
+.task a,
+.new-task a {
+	color: #333333
+}
+
+.active-task {
+	background-color: #b4e1f3
+}
+
+/*****************/
+
+#footer {
+	bottom: 0;
+	height: 30px;
+	width: 100%;
+	display: table;
+	background-color: gray;
+	color: white;
+}
+
+#footer label {
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
+	font-size: 12px
+}
+
+/********** Triggers side style *********/
+#triggers {
+	display: table-cell;
+	padding: 120px 100px; /* Why if using margin will affect task-list? */
+	font-family: 'Times New Roman';
+	vertical-align: top
+}
+
+#triggers label {
+	width: 100%;
+	text-align: center;
+}
+
+.triggeradd label,
+.if label,
+.choose-dark label {
+	text-shadow: 0px 1px 1px rgba(0,0,0,0.4),
+         		 0px 2px 3px rgba(0,0,0,0.1),
+         		 0px 4px 5px rgba(0,0,0,0.1);
+}
+
+#triggers label,
+#triggers li {
+	padding-left: 6px;
+	padding-right: 6px;
+}
+
+.labels {
+	color: white;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	font-size: 16px;
+}
+
+#triggers li {
+	color: white;
+	font-size: 16px;
+}
+
+.trigger,
+.if,
+.choose,
+.choose-dark {
+	position: relative;
+	display: inline-table;
+	list-style: none;
+	text-align: center;
+	height: 24px;
+	width: 60px;
+	background: #8cc63e;
+	border-top: 1px solid #0a6a36;
+	border-left: 1px solid #0a6a36;
+	border-bottom: 1px solid #0a6a36;
+	border-right: 1.3px solid #0a6a36;
+	position: relative;
+}
+
+.trigger {
+	z-index: 10;
+}
+
+.trigger:hover {
+	background: #aee85f;
+}
+
+.trigger:hover:after {
+	border-color: transparent transparent transparent #aee85f;
+}
+
+/* The inner triangle */
+.trigger:after,
+.if:after {
+	content: '';
+	display: block;
+	position: absolute;
+	top: 0px;
+	left: 100%;
+	width: 0;
+	height: 0;
+	border-color: transparent transparent transparent #8cc63e;
+	border-style: solid;
+	border-width: 12px;
+	border-left-width: 10px;
+	border-right-width: 0px; /* Minimize the empty & "transparent" inclickable area */
+}
+
+/* The outer triangle, used to draw the border */
+.trigger:before,
+.if:before {
+	content: '';
+	display: block;
+	position: absolute;
+	top: -0.5px;
+	left: 100%;
+	width: 0;
+	height: 0;
+    border-color: transparent transparent transparent #0a6a36;
+    border-style: solid;
+    border-width: 12.5px;
+    border-left-width: 10.5px;
+    border-right-width: 0px;
+}
+
+.triggeradd:hover .addline {
+	height: 13px;
+	visibility: visible;
+	opacity: 1;
+}
+
+.triggeradd:hover .delete {
+	visibility: visible;
+	opacity: 1;
+}
+
+.addline {
+	position: relative;
+	visibility: hidden;
+	opacity: 0;
+	top: 100%;
+	left: 0px;
+	padding: 0;
+	border-radius: 0px;
+	background: #b3d9a5;
+	border-top: 0px solid #0a6a36;
+	border-left: 1px solid #0a6a36;
+	border-right: 1px solid #0a6a36;
+	border-bottom: 1px solid #0a6a36;
+	width: 20px;
+	height: 0px;
+}
+
+.addline,
+.andif,
+.delete,
+.thenbutton,
+label {
+	-webkit-transition: all .2s ease, background-color 0s;
+	-moz-transition: all .2s ease, background-color 0s;
+	-ms-transition: all .2s ease, background-color 0s;
+	-o-transition: all .2s ease, background-color 0s;
+	transition: all .2s ease, background-color 0s;
+}
+
+.plustext {
+	color: #0a6a36;
+	font-size: 1em;
+}
+
+.addline:hover {
+	background: #0a6a36;
+}
+
+.addline:hover > .plustext {
+	color: #b3d9a5;
+}
+
+.addline:hover:after {
+	border-top: 7px solid #0a6a36;
+}
+
+.addline:after {
+	content: '';
+	display: block;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	width: 0;
+	height: 0;
+	border-style: solid;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-top: 7px solid #b3d9a5;
+	border-bottom-color: transparent;
+}
+
+/* Outline of Or */
+.addline:before {
+	content: '';
+	display: block;
+	position: absolute;
+	top: calc(100% + 0.5px);
+	left: -1px;
+	width: 0;
+	height: 0;
+	border-style: solid;
+	border-left: 11px solid transparent;
+	border-right: 11px solid transparent;
+	border-top: 7.8px solid #0a6a36;
+	border-bottom-color: transparent;
+}
+
+.expanded:hover {
+	background: #b3d9a5;
+}
+
+.expanded:hover:after {
+	border-top: 7px solid #b3d9a5;
+}
+
+/* ------- If button and And If button -------------- */
+.if {
+	left: 0px;
+	z-index: 5;
+	width: 30px;
+
+	border-color: #2a388f;
+	background: #1b75bb;
+}
+
+.if:after {
+	border-color: transparent transparent transparent #1b75bb;
+}
+
+.if:before {
+	border-color: transparent transparent transparent #2a388f;
+}
+
+.ifand:hover > .andif {
+	height: 13px;
+	opacity: 1;
+	visibility: visible;
+}
+
+.ifand:hover .delete {
+	visibility: visible;
+	opacity: 1;
+}
+
+.andif {
+	position: relative;
+	visibility: hidden;
+	opacity: 0;
+	top: 100%;
+	left: 0px;
+	padding: 0;
+	border-radius: 0px;
+	background: #9ad0f1;
+	border-top: 0px solid #2a388f;
+	border-left: 1px solid #2a388f;
+	border-right: 1px solid #2a388f;
+	border-bottom: 1px solid #2a388f;
+	width: 26px;
+	height: 0px;
+}
+
+.andtext {
+	color: #2a388f;
+	font-size: 0.7em;
+	padding-left: 3px;
+	padding-right: 3px;
+}
+
+.andif:hover {
+	background: #2a388f;
+}
+
+.andif:hover > .andtext {
+	color: #9ad0f1;
+}
+
+.andif:hover:after {
+	border-top: 7px solid #2a388f;
+}
+
+.andif:after {
+	content: '';
+	display: block;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	width: 0;
+	height: 0;
+	border-style: solid;
+	border-left: 13px solid transparent;
+	border-right: 13px solid transparent;
+	border-top: 7px solid #9ad0f1;
+	border-bottom-color: transparent;
+}
+
+.andif:before {
+	content: '';
+	display: block;
+	position: absolute;
+	top: calc(100% + 0.5px);
+	left: -1px;
+	width: 0;
+	height: 0;
+	border-style: solid;
+	border-left: 14px solid transparent;
+	border-right: 14px solid transparent;
+	border-top: 7.8px solid #2a388f;
+	border-bottom-color: transparent;
+}
+
+.andifexpanded {
+	height: 24px !important;
+	visibility: visible;
+	opacity: 1;
+}
+
+.andifexpanded:hover {
+	background: #9ad0f1;
+}
+
+.andifexpanded:hover:after {
+	border-top: 7px solid #9ad0f1;
+}
+
+.andifexpanded:hover > .andtext {
+	color: #2a388f;
+}
+
+.delete {
+	visibility: hidden;
+	opacity: 0;
+	position: absolute;
+	right: calc(100% + 2px);
+	top: 5px;
+}
+
+.delete:hover {
+    cursor: pointer;
+}
+
+/* ----------------------------------------- */
+
+.choose {
+	background: #f1f1f2;
+	border-color: #6d6e70;
+	width: 40px;
+	border-right-width: 1px;
+	top: 0;
+	margin: 0;
+	white-space: nowrap;
+}
+
+.choose:hover {
+	background: #fdfdfd;
+}
+
+.choose:hover > ul {
+	opacity: 1;
+	visibility: visible;
+}
+
+.choosetext {
+	color: #6d6e70;
+	font-size: 16px;
+}
+
+.choose ul {
+	visibility: hidden;
+	opacity: 0;
+
+	background: #5f6975;
+	padding: 0;
+	position: absolute;
+	top: 100%;
+	left: -1px;
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+	white-space: nowrap; /* Do not allow wrap text */
+	z-index: 16;
+
+	-webkit-transition: all .2s ease;
+	-moz-transition: all .2s ease;
+	-ms-transition: all .2s ease;
+	-o-transition: all .2s ease;
+	transition: all .2s ease;
+}
+
+.choose ul li {
+	float: none;
+	border-top: 1px solid #6b727c;
+	border-bottom: 1px solid #575f6a;
+	position: relative;
+	height: 24px;
+	text-align: left;
+	padding: 5px;
+	padding-left: 10px;
+	padding-right: 10px;
+
+	-webkit-transition: all .3s ease;
+	-moz-transition: all .3s ease;
+	-ms-transition: all .3s ease;
+	-o-transition: all .3s ease;
+	transition: all .3s ease;
+}
+
+.choose ul li:hover {
+	background: #4b545f;
+}
+
+.choose-dark {
+	background: #6d6e70;
+	border-color: #6d6e70;
+	width: 40px;
+	border-right-width: 1px;
+	z-index: 4;
+	top: 0;
+	margin: 0;
+	white-space: nowrap;
+}
+
+.choosetext-dark {
+	color: #ffffff;
+	font-size: 16px;
+}
+
+.editable {
+	-webkit-touch-callout: text;
+	-webkit-user-select: text;
+	-khtml-user-select: text;
+	-moz-user-select: text;
+	-ms-user-select: text;
+	user-select: text;
+
+	font-size: 16px;
+
+	border: 0px solid white;
+	font-style: italic;
+	color: #adaeb0;
+}
+
+#triggers table, #triggers tr, #triggers td {
+	vertical-align: top;
+	border: 0px solid black;
+	border-spacing: 0px;
+	margin: 0px;
+	padding: 0px
+}
+
+#triggers table, td.blocktd {
+	width: 100%
+}
+
+.options:hover .thenbutton {
+	visibility: visible;
+	opacity: 1;
+}
+
+.thenbutton {
+	visibility: hidden;
+	opacity: 0;
+	background: #fcdffd;
+	border-color: #ebceec;
+}
+
+.thenbutton:hover {
+	background: #ebceec;
+	border-color: #dcbddb;
+}
+
+.thenbutton:hover:after {
+	border-color: transparent transparent transparent #ebceec;
+}
+
+.thenbutton:hover:before {
+	border-color: transparent transparent transparent #dcbddb;
+}
+
+.thenbuttontext {
+	color: white;
+	font-style: italic;
+}
+
+.thenbutton:after {
+	border-color: transparent transparent transparent #fcdffd;
+}
+
+.thenbutton:before {
+	border-color: transparent transparent transparent #ebceec;
+}
+
+.then {
+	background: #dcbfdb;
+	border-color: #652c90;
+}
+
+.thentext {
+	color: white;
+}
+
+.then:after {
+	border-color: transparent transparent transparent #dcbfdb;
+}
+
+.then:before {
+	border-color: transparent transparent transparent #652c90;
+}
+
+.thenand:hover > .andthen {
+	height: 13px;
+	visibility: visible;
+	opacity: 1;
+}
+
+.thenand:hover .delete {
+	visibility: visible;
+	opacity: 1;
+}
+
+.thenand {
+	display: inline-table;
+}
+
+#thenblocks {
+	display: inline-table;
+	position: absolute;
+	min-width: 500px;
+}

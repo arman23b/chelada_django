@@ -2,17 +2,117 @@
 
 {% block body %}
 
-{% include "header.html" %}
-{% load input_type %}
+<div id='header'>
+	<div id='title-bar'>
+		<div id='title-bar-content' style='line-height: 30px' class="uk-grid">
+			<div id='chelada-title' class="uk-width-2-10">
+				<label>Chelada</label>
+			</div>
 
-<div class="container">
+			<span class="uk-width-2-10">
+				<a href='javascript: ;'>What is it?</a>
+			</span>
 
-  <div class="jumbotron text-center">
-    <h1>Welcome!</h1>
-    <p>Your new Django project, {{projectName}}, is ready for development.</p>
-  </div>
-    
+			<span class="uk-width-2-10">
+				<a href='javascript: ;'>How can I use it?</a>
+			</span>
 
-</div><!-- /.container -->
+			<span class="uk-width-2-10">
+				<a href='javascript: ;'>What can I make with it?</a>
+			</span>
+			
+			<span id='login-register' class="uk-grid uk-width-2-10">
+				<span id='register' class="uk-width-1-2">
+					<a href="#modal-reg" data-uk-modal>Register</a>
+				</span>
+				<span id='user-login' class="uk-width-1-2">
+					<a href="#modal-login" data-uk-modal>Login</a>
+				</span>
+			</span>
+			
+		</div>
+	</div>
+</div>
+
+<div class="uk-modal" id='modal-login'>
+    <div class="uk-modal-dialog">
+        <a class="uk-modal-close uk-close"></a>
+        <h1>Log in</h1>
+
+        <div class="uk-form uk-form-horizontal">
+
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-h-it">Email</label>
+                <div class="uk-form-controls">
+                    <input type="text" id="email" placeholder="Email">
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-h-ip">Password</label>
+                <div class="uk-form-controls">
+                    <input type="password" id="pwd" placeholder="Password">
+                </div>
+            </div>
+
+        </div>
+
+        <div style="margin-top: 10px; text-align: right">
+            <button class="uk-button uk-button-primary submit" type="button">Login</button>
+        </div>
+    </div>
+</div>
+
+<div class="uk-modal" id='modal-reg'>
+    <div class="uk-modal-dialog">
+        <a class="uk-modal-close uk-close"></a>
+        <h1>Register</h1>
+
+        <div class="uk-form uk-form-horizontal">
+
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-h-it">Email</label>
+                <div class="uk-form-controls">
+                    <input type="text" id="email" placeholder="Email">
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-h-ip">Password</label>
+                <div class="uk-form-controls">
+                    <input type="password" id="pwd" placeholder="Password">
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-h-ip">Repeat Password</label>
+                <div class="uk-form-controls">
+                    <input type="password" id="pwd-repeat" placeholder="Password">
+                </div>
+            </div>
+            <div class="uk-form-row">
+                <label class="uk-form-label" for="form-h-ip">Nickname</label>
+                <div class="uk-form-controls">
+                    <input type="text" id="nickname" placeholder="Nickname">
+                </div>
+            </div>
+
+        </div>
+
+        <div style="margin-top: 10px; text-align: right">
+            <button class="uk-button uk-button-primary submit" type="button">Register</button>
+        </div>
+    </div>
+</div>
+
+<div class="uk-modal" id='modal-reg-complete'>
+    <div class="uk-modal-dialog">
+        <a class="uk-modal-close uk-close"></a>
+        <h1>Done!</h1>
+        <p>A confirmation Email has been sent. Please click the link enclosed to activate your account. Welcome to Chelada!</p>
+    </div>
+</div>
+
+<div id='intro-body'>
+	<img src='/static/images/frontpage.png' style="width: 100%">
+</div>
+
 
 {% endblock %} <!-- /body -->

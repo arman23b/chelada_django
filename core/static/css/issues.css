@@ -1,0 +1,57 @@
+table#issues {
+    width: 100%
+}
+
+table#issues td {
+    border-collapse: collapse;
+    border: 1px solid #cccccc
+}
+
+th#id {
+    width: 30px
+}
+
+th#type {
+    width: 80px
+}
+
+th#time {
+    width: 200px
+}
+
+th#tag {
+    width: 100px
+}
+
+th#mark-fixed {
+    width: 150px
+}
+
+tr.issue-bug {
+    background: #ffbd15;
+}
+
+tr.issue-feature {
+    background: #85bdff;
+}
+
+tr.issue-comment {
+    background: #5dba55;
+}
+
+tr.issue-bug-fixed {
+    background: #e6ffa8;
+}
+
+#post-new-issue {
+    width: 500px;
+    margin-top: 200px
+}
+
+#post-new-issue div {
+    border: 1px solid gray;
+}
+
+#new-issue-content {
+    height: 100px
+}
