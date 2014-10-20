@@ -9,41 +9,40 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.contrib.auth.models import User
 
 class Cans(models.Model):
-    id = models.IntegerField(primary_key=True)
-    owner_id = models.IntegerField()
+    name = models.CharField(max_length=50L, primary_key=True)
+    owner = models.ForeignKey(User)
     content = models.TextField()
-    token = models.CharField(max_length=40L)
-    can_name = models.CharField(max_length=50L)
-    view_permission = models.CharField(max_length=10L)
-    edit_permission = models.CharField(max_length=10L)
+    # token = models.CharField(max_length=40L)
+    # view_permission = models.CharField(max_length=10L)
+    # edit_permission = models.CharField(max_length=10L)
     class Meta:
         db_table = 'cans'
 
 class EditPermissions(models.Model):
-    id = models.IntegerField(primary_key=True)
-    email = models.CharField(max_length=50L)
+    email = models.CharField(max_length=50L, primary_key=True)
     can_id = models.IntegerField()
     class Meta:
         db_table = 'edit_permissions'
 
 class Issues(models.Model):
-    id = models.IntegerField(primary_key=True)
     type = models.CharField(max_length=20L, blank=True)
     tag = models.CharField(max_length=40L, blank=True)
-    content = models.TextField()
+    content = models.TextField(primary_key=True)
     reply_to_id = models.IntegerField(null=True, blank=True)
     date_time = models.DateTimeField()
     class Meta:
         db_table = 'issues'
 
+'''
 class Users(models.Model):
-    id = models.IntegerField(primary_key=True)
-    email = models.CharField(max_length=40L)
+    # id = models.IntegerField(primary_key=True)
+    email = models.CharField(max_length=40L, primary_key=True)
     password = models.CharField(max_length=40L)
     nickname = models.CharField(max_length=40L)
-    status = models.IntegerField()
+    # status = models.IntegerField(null=True)
     class Meta:
         db_table = 'users'
-
+'''

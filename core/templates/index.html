@@ -21,15 +21,31 @@
 				<a href='javascript: ;'>What can I make with it?</a>
 			</span>
 			
-			<span id='login-register' class="uk-grid uk-width-2-10">
-				<span id='register' class="uk-width-1-2">
-					<a href="#modal-reg" data-uk-modal>Register</a>
-				</span>
-				<span id='user-login' class="uk-width-1-2">
-					<a href="#modal-login" data-uk-modal>Login</a>
-				</span>
-			</span>
-			
+			{% if user.is_authenticated %}
+            <span id='logged-in-logout' class="uk-width-2-10">
+                <div class="uk-button-dropdown" data-uk-dropdown>
+                    Welcome,
+                    <a href='/editor' class="uk-button">{{ user.first_name }}</a>
+
+                    <div class="uk-dropdown uk-dropdown-small">
+                        <ul class="uk-nav uk-nav-dropdown">
+                            <li><a href='/editor'>My Cans</a></li>
+                            <li><a href='/user/logout'>Log out</a></li>
+                        </ul>
+                    </div>
+
+                </div>
+            </span>
+            {% else %}
+            <span id='login-register' class="uk-grid uk-width-2-10">
+                <span id='register' class="uk-width-1-2">
+                    <a href="#modal-reg" data-uk-modal>Register</a>
+                </span>
+                <span id='user-login' class="uk-width-1-2">
+                    <a href="#modal-login" data-uk-modal>Login</a>
+                </span>
+            </span>
+			{% endif %}
 		</div>
 	</div>
 </div>
@@ -59,6 +75,7 @@
         <div style="margin-top: 10px; text-align: right">
             <button class="uk-button uk-button-primary submit" type="button">Login</button>
         </div>
+        {% csrf_token %}
     </div>
 </div>
 
@@ -93,12 +110,12 @@
                     <input type="text" id="nickname" placeholder="Nickname">
                 </div>
             </div>
-
         </div>
 
         <div style="margin-top: 10px; text-align: right">
             <button class="uk-button uk-button-primary submit" type="button">Register</button>
         </div>
+        {% csrf_token %}
     </div>
 </div>
 

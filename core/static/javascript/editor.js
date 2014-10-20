@@ -3,6 +3,9 @@
 
 var hasUnsavedChanges = 0;
 
+var activeCan = "";
+var activeTask = "";
+
 function closeModal(selector) {
     selector.find('.uk-close').trigger('click');
 }
@@ -90,18 +93,20 @@ function uploadChanges() {
 
     var owner_id = $('#logged-in-user').attr('user-id');
 
+    console.log(JSON.stringify($('body').data('json')));
+
     $.ajax({
         'url': '/editor/upload',
         'type': 'POST',
         'dataType': 'json',
-        'data': {json: $('body').data('json'), owner_id: owner_id},
+        'data': {json: JSON.stringify($('body').data('json')), name: $.trim($('#modal-new-can input').val())},
         'success': function(data) {
             //location.reload(true);
-            toast('Saved', 'success');
+            toastr.error('Saved', 'success');
         },
         'error': function(data) {
             console.log(JSON.stringify(data));
-            toast('Something goes wrong. Please try to save later.', 'danger');
+            toastr.error('Something goes wrong. Please try to save later.', 'danger');
         }
     });
 }
@@ -121,7 +126,7 @@ function enterEditMode() {
 function submitNewCan() {
     var canName = $.trim($('#modal-new-can input').val());
     if (doesCanExist(canName) == true) {
-        toast('A Can name must be unique.', 'danger');
+        toastr.error('A Can name must be unique.', 'danger');
     }
     else {
         var newCan = {'can-name': canName, 'tasks': []};
@@ -157,7 +162,7 @@ function submitNewTask() {
     var taskName = $.trim($('#modal-new-task input').val());
 
     if (doesTaskInCanExist(newTaskOfCan, taskName) == true) {
-        toast('Name of the new Task must be unique within the Can ' + newTaskOfCan + '.', 'danger');
+        toastr.error('Name of the new Task must be unique within the Can ' + newTaskOfCan + '.', 'danger');
         return;
     }
     else {
@@ -180,7 +185,7 @@ function getCanObjByName(canName) {
             result = $(this);
     });
     if (result == null) {
-        toast('Failed retrieving Can name.', 'danger');
+        toastr.error('Failed retrieving Can name.', 'danger');
         return null;
     }
     else
@@ -274,7 +279,7 @@ function parseJSONText() {
          markAsContentChanged();
          loadCansToWorkspace();
     } catch (e) {
-        toast('Parsing failed: ' + e, 'danger');
+        toastr.error('Parsing failed: ' + e, 'danger');
     }
 }
 
@@ -697,10 +702,10 @@ function attachCanDeleteHandler() {
                 'dataType': 'json',
                 'data': { token: canToken, id: canId },
                 'success': function () {
-                    toast('Can deleted successfully.', 'success');
+                    toastr.error('Can deleted successfully.', 'success');
                 },
                 'error': function () {
-                    toast('Error uploading to server. Please try again later.', 'danger');
+                    toastr.error('Error uploading to server. Please try again later.', 'danger');
                 }
             });
 
