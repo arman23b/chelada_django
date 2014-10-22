@@ -23,7 +23,7 @@ label {
 
 @font-face {
     font-family: carto;
-    src: url("/public/font/CartoGothicStd-Book.woff");
+    src: url("/static/fonts/CartoGothicStd-Book.woff");
 }
 
 .lifted {

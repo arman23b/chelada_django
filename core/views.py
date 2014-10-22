@@ -97,18 +97,16 @@ def editorUpload(request):
 	user = request.user
 	decoded = json.loads(request.POST['json'])
 
+	# Option 1. Delete all cans and create new to account for name edits
+	# Option 2. Restrict changing can names
+
+	models.Cans.objects.all().delete()
+
 	for canData in decoded:
 		name = canData['can-name']
 		content = json.dumps(canData)
-		try:
-			can = models.Cans.objects.get(name=name, owner=user)
-			# Edit
-			can.content = content
-			can.save()
-		except models.Cans.DoesNotExist:
-			# Create
-			new_can = models.Cans.objects.create(name=name, owner=user, content=content)
-			new_can.save()
+		new_can = models.Cans.objects.create(name=name, owner=user, content=content)
+		new_can.save()	
 	return HttpResponse(json.dumps(response_data), content_type="application-json")
 
 

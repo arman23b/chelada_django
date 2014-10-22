@@ -120,39 +120,12 @@
 <label id='initial-cans-storage' class='gone'>[{{ cansData | safe }}]</label>
 
 <div id='header'>
-	<div id='title-bar'>
-		<div id='title-bar-content' style='line-height: 30px' class="uk-grid">
-			<span id='chelada-title' class="uk-width-2-10">
-				<a href='/'>Chelada</a>
-			</span>
-
-			<span id='browse' class="uk-width-3-10">
-				<a href='/browse'>Browse Public Cans</a>
-			</span>
-
-			<span id='issues' class="uk-width-3-10">
-				<a href='/issues'>Bug Tracker</a>
-			</span>
-
-			<span id='logged-in-logout' class="uk-width-2-10">
-				<div class="uk-button-dropdown" data-uk-dropdown>
-					Welcome,
-					<a href='/editor' id='logged-in-user' user-id={{ user.id }} class="uk-button"> {{ user.first_name }}</a>
-
-					<div class="uk-dropdown uk-dropdown-small">
-						<ul class="uk-nav uk-nav-dropdown">
-							<li><a href='/user/logout'>Log out</a></li>
-						</ul>
-					</div>
-
-				</div>
-			</span>
-		</div>
-	</div> 
-
+	{% include "header.html" %}
+	{% load input_type %}
+	
 	<div id='nav-bar'>
 		<div id='nav-bar-content'>
-			<span id='new-can'><a href="#modal-new-can" data-uk-modal><img>Create a New Can</a></span><span id='edit-cans' onclick="enterEditMode()"><a href='javascript:;'><img>Edit Cans</a></span><span id='save-can' onclick="uploadChanges()"><a href='javascript:;'><img>Save Can</a></span><span id='task-name-caption'>Current Task</span><span id='active-task-name'></span>
+			<span id='new-can'><a href="#modal-new-can" data-uk-modal><img>Create a New Can</a></span><span id='edit-cans' onclick="enterEditMode()"><a href='javascript:;'><img>Edit Cans</a></span><span id='save-can' onclick="uploadChanges()"><a href='javascript:;'><img>Save All Cans</a></span><span id='task-name-caption'>Current Task</span><span id='active-task-name'></span>
 			<span id='share'>
 				<a href='javascript:;'><img>Share</a>
 				<ul>
@@ -174,7 +147,7 @@
 			<div>Cans shared with you</div>
 			<ul>
 				{% for can in cans %}
-				<li class='shared-can'><a href='/editor/edit/id/'> {{ can.name }} </a></li>
+				<li class='shared-can'><a href='/browse/browse/id'> {{ can.name }} </a></li>
 				{% endfor %}
 			</ul>
 		</div>
@@ -186,6 +159,6 @@
 {% endblock %}
 
 {% block end %}
-	<script src="/static/javascript/editor.js"></script>
-	<script src="/static/javascript/triggers.js"></script>
+<script src="/static/javascript/editor.js"></script>
+<script src="/static/javascript/triggers.js"></script>
 {% endblock %}
