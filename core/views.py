@@ -88,37 +88,18 @@ def editor(request):
 	data['user'] = user
 	cans = models.Cans.objects.filter(owner=user)
 	data['cans'] = cans
-	if len(cans) == 0:
-		cansData = []
-	else:
-		s = ""
-		for can in cans:
-			# print convert(can.content)
-			s += convert(can.content)
-	data['cansData'] = s
-	print type(s)
+	data['cansData'] = getCansData(cans)
 	return render_to_response("editor.html", data, context_instance=RequestContext(request))
 
-def convert(input):
-    if isinstance(input, dict):
-        return {convert(key): convert(value) for key, value in input.iteritems()}
-    elif isinstance(input, list):
-        return [convert(element) for element in input]
-    elif isinstance(input, unicode):
-        return input.encode('utf-8')
-    else:
-        return input
 
 def editorUpload(request):
 	response_data = {}
 	user = request.user
 	decoded = json.loads(request.POST['json'])
-	# print decoded
 
 	for canData in decoded:
 		name = canData['can-name']
-		content = json.dumps(canData['tasks'])
-		print content
+		content = json.dumps(canData)
 		try:
 			can = models.Cans.objects.get(name=name, owner=user)
 			# Edit
@@ -131,9 +112,49 @@ def editorUpload(request):
 	return HttpResponse(json.dumps(response_data), content_type="application-json")
 
 
+#################
+#### Browse #####
+#################
+
+def browse(request):
+	user = request.user
+	data = {}
+	cans = models.Cans.objects.all()
+
+	data['user'] = user
+	data['cans'] = cans
+	return render_to_response("browse.html", data, context_instance=RequestContext(request))
+
+
+def browseLook(request):
+	user = request.user
+	data = {}
+	cans = models.Cans.objects.all()
+
+	data['user'] = user
+	data['cans'] = cans
+	data['cansData'] = getCansData(cans)
+	return render_to_response("browseLook.html", data, context_instance=RequestContext(request))
+
+
 ###################
 ##### HELPERS #####
 ###################
+
+def getCansData(cans):
+	if len(cans) == 0:
+		return ""
+	return",".join(map(lambda x : x.content, cans))
+
+def convert(input):
+    if isinstance(input, dict):
+        return {convert(key): convert(value) for key, value in input.iteritems()}
+    elif isinstance(input, list):
+        return [convert(element) for element in input]
+    elif isinstance(input, unicode):
+        return input.encode('utf-8')
+    else:
+        return input
 
 def authUser(email, password):
 	return authenticate(username=email, password=password)

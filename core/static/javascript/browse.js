@@ -1,3 +1,5 @@
+var activeCan = null;
+
 $(document).ready(function() {
 	$('*:not(body, #shade)').off('click'); /* Without this, click will be registered twice for some buttons */
 
@@ -22,10 +24,10 @@ function submitBug() {
 		'dataType': 'json',
 		'data': {bug: $('#bug-content').val()},
 		'success': function(data) {
-			toast('Thank you! :)');
+			toastr.error('Thank you! :)');
 		},
 		'error': function(data) {
-			toast('Something goes wrong. Please try again later.');
+			toastr.error('Something goes wrong. Please try again later.');
 		}
 	});
 }
@@ -37,7 +39,7 @@ function getCanObjByName(canName) {
 			result = $(this);
 	});
 	if (result == null) {
-		toast('Error retrieving Can name.');
+		toastr.error('Error retrieving Can name.');
 		return null;
 	}
 	else
