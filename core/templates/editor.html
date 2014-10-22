@@ -122,7 +122,7 @@
 <div id='header'>
 	{% include "header.html" %}
 	{% load input_type %}
-	
+
 	<div id='nav-bar'>
 		<div id='nav-bar-content'>
 			<span id='new-can'><a href="#modal-new-can" data-uk-modal><img>Create a New Can</a></span><span id='edit-cans' onclick="enterEditMode()"><a href='javascript:;'><img>Edit Cans</a></span><span id='save-can' onclick="uploadChanges()"><a href='javascript:;'><img>Save All Cans</a></span><span id='task-name-caption'>Current Task</span><span id='active-task-name'></span>
@@ -161,4 +161,5 @@
 {% block end %}
 <script src="/static/javascript/editor.js"></script>
 <script src="/static/javascript/triggers.js"></script>
+<script src="/static/uikit/js/uikit.min.js"></script>
 {% endblock %}
