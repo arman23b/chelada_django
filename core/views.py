@@ -135,6 +135,23 @@ def browseLook(request):
 	return render_to_response("browseLook.html", data, context_instance=RequestContext(request))
 
 
+#################
+#### Mobile #####
+#################
+
+def mobileListCans(request):
+	data = {}
+	cans = models.Cans.objects.all()
+	data['cans'] = map(lambda x: convert(x.name), cans)
+	return render_to_response("mobileListCans.html", data, context_instance=RequestContext(request))
+
+def mobileGetCan(request, canName):
+	data = {}
+	can = models.Cans.objects.get(name=canName)
+	data['canContent'] = convert(can.content)
+	return render_to_response("mobileGetCan.html", data, context_instance=RequestContext(request))
+
+
 ###################
 ##### HELPERS #####
 ###################
