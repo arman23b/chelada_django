@@ -1,4 +1,3 @@
-# Create your views here.
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import models, authenticate, login, logout
 from core import models
@@ -77,7 +76,6 @@ def registerUser(request):
 	return HttpResponse(json.dumps(response_data), content_type="application-json")
 		
 
-
 #################
 #### Editor #####
 #################
@@ -91,21 +89,24 @@ def editor(request):
 	data['cansData'] = getCansData(cans)
 	return render_to_response("editor.html", data, context_instance=RequestContext(request))
 
-
 def editorUpload(request):
 	response_data = {}
 	user = request.user
 	decoded = json.loads(request.POST['json'])
 
 	# Option 1. Delete all cans and create new to account for name edits
-	# Option 2. Restrict changing can names
+	# Option 2. Restrict changing can names as they are used as primary keys in DB
 
 	models.Cans.objects.all().delete()
 
 	for canData in decoded:
 		name = canData['can-name']
+		view_permission = canData.get('view-permission', "private")
 		content = json.dumps(canData)
-		new_can = models.Cans.objects.create(name=name, owner=user, content=content)
+		new_can = models.Cans.objects.create(name=name, 
+											 owner=user, 
+											 content=content, 
+											 view_permission=view_permission)
 		new_can.save()	
 	return HttpResponse(json.dumps(response_data), content_type="application-json")
 
@@ -117,17 +118,16 @@ def editorUpload(request):
 def browse(request):
 	user = request.user
 	data = {}
-	cans = models.Cans.objects.all()
+	cans = models.Cans.objects.filter(view_permission="public")
 
 	data['user'] = user
 	data['cans'] = cans
 	return render_to_response("browse.html", data, context_instance=RequestContext(request))
 
-
 def browseLook(request):
 	user = request.user
 	data = {}
-	cans = models.Cans.objects.all()
+	cans = models.Cans.objects.filter(view_permission="public")
 
 	data['user'] = user
 	data['cans'] = cans
@@ -141,13 +141,13 @@ def browseLook(request):
 
 def mobileListCans(request):
 	data = {}
-	cans = models.Cans.objects.all()
+	cans = models.Cans.objects.filter(view_permission="public")
 	data['cans'] = map(lambda x: convert(x.name), cans)
 	return render_to_response("mobileListCans.html", data, context_instance=RequestContext(request))
 
 def mobileGetCan(request, canName):
 	data = {}
-	can = models.Cans.objects.get(name=canName)
+	can = models.Cans.objects.get(name=canName, view_permission="public")
 	data['canContent'] = convert(can.content)
 	return render_to_response("mobileGetCan.html", data, context_instance=RequestContext(request))
 

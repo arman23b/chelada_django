@@ -15,8 +15,8 @@ class Cans(models.Model):
     name = models.CharField(max_length=50L, primary_key=True)
     owner = models.ForeignKey(User)
     content = models.TextField()
+    view_permission = models.CharField(max_length=10L) # public or private
     # token = models.CharField(max_length=40L)
-    # view_permission = models.CharField(max_length=10L)
     # edit_permission = models.CharField(max_length=10L)
     class Meta:
         db_table = 'cans'
@@ -36,13 +36,13 @@ class Issues(models.Model):
     class Meta:
         db_table = 'issues'
 
-'''
-class Users(models.Model):
-    # id = models.IntegerField(primary_key=True)
-    email = models.CharField(max_length=40L, primary_key=True)
-    password = models.CharField(max_length=40L)
-    nickname = models.CharField(max_length=40L)
-    # status = models.IntegerField(null=True)
-    class Meta:
-        db_table = 'users'
-'''
+# Using django built-in User
+
+# class Users(models.Model):
+#     id = models.IntegerField(primary_key=True)
+#     email = models.CharField(max_length=40L, primary_key=True)
+#     password = models.CharField(max_length=40L)
+#     nickname = models.CharField(max_length=40L)
+#     status = models.IntegerField(null=True)
+#     class Meta:
+#         db_table = 'users'
