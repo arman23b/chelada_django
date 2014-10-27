@@ -8,6 +8,8 @@ from django import forms
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 
+from collections import OrderedDict
+
 import json, unicodedata
 
 #################
@@ -92,7 +94,7 @@ def editor(request):
 def editorUpload(request):
 	response_data = {}
 	user = request.user
-	decoded = json.loads(request.POST['json'])
+	decoded = json.loads(request.POST['json'],object_pairs_hook=OrderedDict)
 
 	# Option 1. Delete all cans and create new to account for name edits
 	# Option 2. Restrict changing can names as they are used as primary keys in DB
