@@ -99,7 +99,7 @@ def editorUpload(request):
 	# Option 1. Delete all cans and create new to account for name edits
 	# Option 2. Restrict changing can names as they are used as primary keys in DB
 
-	models.Cans.objects.all().delete()
+	models.Cans.objects.filter(owner=user).delete()
 
 	for canData in decoded:
 		name = canData['can-name']
