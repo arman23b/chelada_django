@@ -583,7 +583,9 @@ function submitSettings() {
             var viewPermission = canSettings.find('#viewing-permission').val();
             var editPermission = canSettings.find('#editing-permission').val();
             var canIcon = canSettings.find('#link-can-icon').val();
-            var editors = canSettings.find('#editors').text();
+            var editors = canSettings.find('#editors').val();
+
+            console.log(canSettings.find('#editors').val());
 
             arr[i]['view-permission'] = viewPermission;
             arr[i]['edit-permission'] = editPermission;

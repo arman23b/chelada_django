@@ -5,10 +5,10 @@
 <div class="uk-modal" id='modal-new-can'>
 	<div class="uk-modal-dialog">
 		<a class="uk-modal-close uk-close"></a>
-		<h1>New Can</h1>
+		<h1>New Feed</h1>
 		<div class="uk-form uk-form-horizontal">
 			<div class="uk-form-row">
-				<label class="uk-form-label" for="form-h-it">Can Name</label>
+				<label class="uk-form-label" for="form-h-it">Feed Name</label>
 				<div class="uk-form-controls">
 					<input type="text">
 				</div>
@@ -66,7 +66,7 @@
 		<h2>Settings</h2>
 		<div class="uk-form uk-form-horizontal">
 			<div class="uk-form-row">
-				<label class="uk-form-label" for="form-h-it">Link to Can icon</label>
+				<label class="uk-form-label" for="form-h-it">Link to Feed icon</label>
 				<div class="uk-form-controls">
 					<input id="link-can-icon" />
 				</div>
@@ -77,7 +77,7 @@
 				<div class="uk-form-controls">
 					<select id='viewing-permission'>
 						<option value="private">Private - Anyone with a link can view</option>
-						<option value="public">Public - Anyone can view in Public Cans page</option>
+						<option value="public">Public - Anyone can view in Public Feeds page</option>
 					</select>
 				</div>
 			</div>
@@ -108,7 +108,7 @@
 <div class="uk-modal" id='modal-cans-export'>
 	<div class="uk-modal-dialog">
 		<a class="uk-modal-close uk-close"></a>
-		<h2>Choose Cans to Export</h2>
+		<h2>Choose Feeds to Export</h2>
 		<form id='cans-container'>
 		</form>
 		<div class="modal-btn-done">
@@ -125,7 +125,7 @@
 
 	<div id='nav-bar'>
 		<div id='nav-bar-content'>
-			<span id='new-can'><a href="#modal-new-can" data-uk-modal><img>Create a New Can</a></span><span id='edit-cans' onclick="enterEditMode()"><a href='javascript:;'><img>Edit Cans</a></span><span id='save-can' onclick="uploadChanges()"><a href='javascript:;'><img>Save All Cans</a></span><span id='task-name-caption'>Current Task</span><span id='active-task-name'></span>
+			<span id='new-can'><a href="#modal-new-can" data-uk-modal><img>Create a New Feed</a></span><span id='edit-cans' onclick="enterEditMode()"><a href='javascript:;'><img>Edit Feeds</a></span><span id='save-can' onclick="uploadChanges()"><a href='javascript:;'><img>Save All Feeds to Database</a></span><span id='task-name-caption'>Current Task</span><span id='active-task-name'></span>
 			<span id='share'>
 				<a href='javascript:;'><img>Share</a>
 				<ul>
@@ -139,12 +139,12 @@
 	</div>		
 </div>
 
-<div id='welcome-title'>To start, create a new Can and a Task in that Can</div>
+<div id='welcome-title'>To start, create a new Feed and a Task in that Feed</div>
 
 <div id='editor'>
 	<div id='cans-browser'>
 		<div id='managing-cans'>
-			<div>Cans shared with you</div>
+			<div>Feeds shared with you</div>
 			<ul>
 				{% for can in cans %}
 				<li class='shared-can'><a href='/browse/browse/id'> {{ can.name }} </a></li>
