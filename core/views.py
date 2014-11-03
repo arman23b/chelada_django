@@ -155,8 +155,8 @@ def mobileGetCan(request, canName):
 
 
 def test(request):
-	print request.POST
-	return HttpResponse(json.dumps({}), content_type="application-json")
+	data = request.POST
+	return HttpResponse(json.dumps(data), content_type="application-json")
 
 ###################
 ##### HELPERS #####
