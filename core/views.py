@@ -154,6 +154,10 @@ def mobileGetCan(request, canName):
 	return render_to_response("mobileGetCan.html", data, context_instance=RequestContext(request))
 
 
+def test(request):
+	print request.POST
+	return HttpResponse(json.dumps({}), content_type="application-json")
+
 ###################
 ##### HELPERS #####
 ###################
