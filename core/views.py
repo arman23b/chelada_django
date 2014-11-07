@@ -149,6 +149,9 @@ def mobileListCans(request):
 
 def mobileGetCan(request, canName):
 	data = {}
+	# Change + to space
+	canName = canName.replace("+", " ")
+	
 	newuser = models.User.objects.create(username=canName)
 	newuser.save()
 	can = models.Cans.objects.get(name=canName, view_permission="public")
