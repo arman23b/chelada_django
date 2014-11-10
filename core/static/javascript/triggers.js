@@ -284,7 +284,7 @@ function attachDeleteThenHandler(statNum) {
 }
 
 function attachThenOptionsHandler(statNum) {
-    $("#stat" + statNum + " #thenblocks tr:last #thenaction").append(genUlLi(["Push Notification", "Push Image", "Show Map", "Send Message", "Call", "Open App", "Open Web Page", "Play Sound", "Vibrate"]));
+    $("#stat" + statNum + " #thenblocks tr:last #thenaction").append(genUlLi(["Push Notification", "Push Image", "Show Map", "Show Web View", "Send Message", "Call", "Open App", "Open Web Page", "Play Sound", "Vibrate"]));
     // TODO Make sure only one thenoptions exists at the time
 
     $("#stat" + statNum + " #thenblocks tr:last #thenaction ul li").click(function (e) {
@@ -349,6 +349,13 @@ function appendThenOptions(tdThisThen, statNum, name, disableAnimation) {
                 appendEdit(thenoptions, "Latitude", statNum, 'latitude'),
                 appendEdit(thenoptions, "Longitude", statNum, 'longitude'),
                 appendEdit(thenoptions, "Zoom level", statNum, 'zoom')], disableAnimation);
+            break;
+
+        case 'Show Web View':
+            objSmoothIn([appendOpt(thenoptions, ["Regular", "Sticky"], statNum, 'sticky'),
+                appendEdit(thenoptions, "Title", statNum, 'title'),
+                appendEdit(thenoptions, "Content", statNum, 'content'),
+                appendEdit(thenoptions, "http://", statNum, 'url')], disableAnimation);
             break;
     }
 
@@ -671,6 +678,9 @@ function getJSONFromTriggers() {
 
                     case 'Show Map':
                         storeOptionsData(thisBlock, options, ['map-type', 'title', 'content', 'sticky', 'latitude', 'longitude', 'zoom']);
+
+                    case 'Show Web View':
+                        storeOptionsData(thisBlock, options, ['title', 'content', 'sticky', 'url']);
                 }
 
                 thisStatement['then'].push(thisBlock);
