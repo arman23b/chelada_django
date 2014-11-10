@@ -158,14 +158,13 @@ def mobileGetCan(request, canName):
 
 def test(request):
 	user = request.user
-	data = request.POST
-	content = json.loads(data)
+	content = str(request.POST)
 	new_can = models.Cans.objects.create(name="TestCan", 
 										 owner=user, 
 										 content=content, 
 										 view_permission="public")
 	new_can.save()
-	return HttpResponse(json.dumps(data), content_type="application-json")
+	return HttpResponse(json.dumps({}), content_type="application-json")
 
 ###################
 ##### HELPERS #####
