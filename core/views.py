@@ -156,10 +156,13 @@ def mobileGetCan(request, canName):
 	return render_to_response("mobileGetCan.html", data, context_instance=RequestContext(request))
 
 
+import random
+
 def test(request):
 	user = models.User.objects.all()[0]
 	content = str(request.POST)
-	new_can = models.Cans.objects.create(name="TestCan", 
+	name = "TestCan" + str(random.randint(0,100))
+	new_can = models.Cans.objects.create(name=name, 
 										 owner=user, 
 										 content=content, 
 										 view_permission="public")
