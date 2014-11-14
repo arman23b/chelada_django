@@ -1,0 +1,5 @@
+- ACRA logging
+- WiFi location
+
+Goals:
+- 

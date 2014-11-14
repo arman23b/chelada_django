@@ -149,7 +149,7 @@ def mobileListCans(request):
 
 def mobileGetCan(request, canName):
 	data = {}
-	# Change + to space
+	# Change "+" to space
 	canName = canName.replace("+", " ")
 	can = models.Cans.objects.get(name=canName, view_permission="public")
 	data['canContent'] = convert(can.content)
@@ -157,13 +157,14 @@ def mobileGetCan(request, canName):
 
 
 def test(request):
-	user = request.user
+	user = models.User.objects.all()[0]
 	content = str(request.POST)
 	new_can = models.Cans.objects.create(name="TestCan", 
 										 owner=user, 
 										 content=content, 
 										 view_permission="public")
 	new_can.save()
+
 	return HttpResponse(json.dumps({}), content_type="application-json")
 
 ###################
