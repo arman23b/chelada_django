@@ -13,5 +13,5 @@ urlpatterns = patterns('',
     url(r'^browse/browse/id$', views.browseLook, name='browseLook'),
     url(r'^mobile/listcans$', views.mobileListCans, name='mobileListCans'),
     url(r'^mobile/getcan/canname/(?P<canName>[\w|\W]+)$', views.mobileGetCan, name='mobileGetCan'),
-    url(r'^acra-test$', views.test, name='test'),
+    # url(r'^acra-test$', views.test, name='test'),
 )
