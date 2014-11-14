@@ -20,7 +20,8 @@ def index(request):
 	
 	
 	if(request.method=="PUT" or request.method=="POST"):
-		#log.log(logging.DEBUG, "got put "+ str(request.body) )
+		print "Got: " + str(request.body)
+		# log.log(logging.DEBUG, "got put "+ str(request.body) )
 		json_data = json.loads(request.body)
 		description = "";
 		if(json_data.has_key("description")):
