@@ -33,13 +33,12 @@ $(document).ready(function() {
     });
 
     var initialData = $('#initial-cans-storage').html();
-    if (initialData.length != 0)
+    if (initialData.length != 0) {
         $('body').data('json', $.parseJSON(initialData));
-    else
+        loadCansToWorkspace();
+    } else {
         $('body').data('json', []);
-
-    loadCansToWorkspace();
-
+    }
     /* Bind page unload event to see if the user need to save changed */
     window.onbeforeunload = function () {
         if (hasUnsavedChanges == 1)
@@ -174,7 +173,7 @@ function submitNewTask() {
 
         closeModal($('#modal-new-task'));
         loadTasksOfCan(getCanObjByName(newTaskOfCan));
-        markActiveTask();
+        if (activeCan != null) markActiveTask();
         markAsContentChanged();
     }
 }
@@ -376,14 +375,8 @@ function attachNewTaskHandler() {
  * @requires Number of Cans > 0
  */
 function loadCansToWorkspace() {
-    if (getNumOfCans() == 0) {
-        // $('#cans-browser').addClass('invisible');
-        // $('#cans-browser').html('');
-        return;
-    }
 
     $('#cans-browser').removeClass('invisible');
-
 
     /* Purge old Cans */
     $('.can').remove();
@@ -425,7 +418,7 @@ function loadCansToWorkspace() {
     if (activeCan == null || doesCanExist(activeCan) == false)
         activeCan = firstCanName;
 
-    markActiveTask();
+    if (firstCanName != null) markActiveTask();
     attachSettingsHandler();
 }
 

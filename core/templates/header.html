@@ -1,7 +1,13 @@
 <div id='title-bar'>
 	<div id='title-bar-content' style='line-height: 30px' class="uk-grid">
+
 		<span id='chelada-title' class="uk-width-2-10">
-			<a href='/'>Chelada</a>
+			<span id='chelada-title' class="uk-width-2-10">
+				<img src="/static/images/logo.ico" alt="Logo" width=30 height=30>
+			</span>
+			<span id='chelada-title' class="uk-width-8-10">
+				<a href='/'>Chelada</a>
+			</span>
 		</span>
 
 		<span id='browse' class="uk-width-3-10">
@@ -9,7 +15,7 @@
 		</span>
 
 		<span id='issues' class="uk-width-3-10">
-			<a href='/issues'>Bug Tracker</a>
+			<a href='#'>Bug Tracker</a>
 		</span>
 
 		{% if user.is_authenticated %}

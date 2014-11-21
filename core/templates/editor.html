@@ -117,7 +117,11 @@
 	</div>
 </div>
 
+{% if cansData|length == 0 %}
+<label id='initial-cans-storage' class='gone'></label>
+{% else %}
 <label id='initial-cans-storage' class='gone'>[{{ cansData | safe }}]</label>
+{% endif %}
 
 <div id='header'>
 	{% include "header.html" %}
