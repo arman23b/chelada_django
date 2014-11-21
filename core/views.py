@@ -104,7 +104,7 @@ def editorUpload(request):
 
 	for canData in decoded:
 		name = canData['can-name']
-		view_permission = canData.get('view-permission', "private")
+		view_permission = canData.get('view-permission', "public")
 		content = json.dumps(canData)
 		new_can = models.Cans.objects.create(name=name, 
 											 owner=user, 

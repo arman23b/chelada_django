@@ -377,8 +377,8 @@ function attachNewTaskHandler() {
  */
 function loadCansToWorkspace() {
     if (getNumOfCans() == 0) {
-        $('#cans-browser').addClass('invisible');
-        $('#cans-browser').html('');
+        // $('#cans-browser').addClass('invisible');
+        // $('#cans-browser').html('');
         return;
     }
 
