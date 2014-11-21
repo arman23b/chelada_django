@@ -12,7 +12,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Cans(models.Model):
-    name = models.CharField(max_length=50L, primary_key=True)
+    name = models.CharField(max_length=50L)
     owner = models.ForeignKey(User)
     content = models.TextField()
     view_permission = models.CharField(max_length=10L) # public or private
@@ -21,20 +21,20 @@ class Cans(models.Model):
     class Meta:
         db_table = 'cans'
 
-class EditPermissions(models.Model):
-    email = models.CharField(max_length=50L, primary_key=True)
-    can_id = models.IntegerField()
-    class Meta:
-        db_table = 'edit_permissions'
+# class EditPermissions(models.Model):
+#     email = models.CharField(max_length=50L, primary_key=True)
+#     can_id = models.IntegerField()
+#     class Meta:
+#         db_table = 'edit_permissions'
 
-class Issues(models.Model):
-    type = models.CharField(max_length=20L, blank=True)
-    tag = models.CharField(max_length=40L, blank=True)
-    content = models.TextField(primary_key=True)
-    reply_to_id = models.IntegerField(null=True, blank=True)
-    date_time = models.DateTimeField()
-    class Meta:
-        db_table = 'issues'
+# class Issues(models.Model):
+#     type = models.CharField(max_length=20L, blank=True)
+#     tag = models.CharField(max_length=40L, blank=True)
+#     content = models.TextField(primary_key=True)
+#     reply_to_id = models.IntegerField(null=True, blank=True)
+#     date_time = models.DateTimeField()
+#     class Meta:
+#         db_table = 'issues'
 
 # Using django built-in User
 

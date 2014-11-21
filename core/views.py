@@ -87,9 +87,9 @@ def editor(request):
 	data = {}
 	user = request.user
 	data['user'] = user
-	cans = models.Cans.objects.filter(owner=user)
+	cans = models.Cans.objects.filter(owner=user).order_by('id')
 	data['cansData'] = getCansData(cans)
-	data['sharedCans'] = models.Cans.objects.filter(Q(view_permission="public") and ~Q(owner=user))
+	data['sharedCans'] = models.Cans.objects.filter(Q(view_permission="public") and ~Q(owner=user)).order_by('id')
 	return render_to_response("editor.html", data, context_instance=RequestContext(request))
 
 def editorUpload(request):
@@ -121,7 +121,7 @@ def editorUpload(request):
 def browse(request):
 	user = request.user
 	data = {}
-	cans = models.Cans.objects.filter(view_permission="public")
+	cans = models.Cans.objects.filter(view_permission="public").order_by('id')
 
 	data['user'] = user
 	data['cans'] = cans
@@ -130,7 +130,7 @@ def browse(request):
 def browseLook(request):
 	user = request.user
 	data = {}
-	cans = models.Cans.objects.filter(view_permission="public")
+	cans = models.Cans.objects.filter(view_permission="public").order_by('id')
 
 	data['user'] = user
 	data['cans'] = cans
@@ -144,7 +144,7 @@ def browseLook(request):
 
 def mobileListCans(request):
 	data = {}
-	cans = models.Cans.objects.filter(view_permission="public")
+	cans = models.Cans.objects.filter(view_permission="public").order_by('id')
 	data['cans'] = map(lambda x: convert(x.name), cans)
 	return render_to_response("mobileListCans.html", data, context_instance=RequestContext(request))
 
