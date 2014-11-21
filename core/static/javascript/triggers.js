@@ -691,7 +691,7 @@ function getJSONFromTriggers() {
 
         return jsonExport;
     } catch(err) {
-        toastr.error(err, 'warning');
+        toastr.info(err);
         return 1;
     }
 }
@@ -759,7 +759,7 @@ function printJSONToTriggers(data) {
             }
         });
     } catch (e) {
-        toastr.error('Failed to parse JSON object: ' + e, 'danger');
+        toastr.error('Failed to parse JSON object: ' + e);
     }
 }
 

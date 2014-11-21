@@ -7,6 +7,7 @@ from django.template import RequestContext
 from django import forms
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
+from django.db.models import Q
 
 from collections import OrderedDict
 
@@ -87,8 +88,8 @@ def editor(request):
 	user = request.user
 	data['user'] = user
 	cans = models.Cans.objects.filter(owner=user)
-	data['cans'] = cans
 	data['cansData'] = getCansData(cans)
+	data['sharedCans'] = models.Cans.objects.filter(Q(view_permission="public") and ~Q(owner=user))
 	return render_to_response("editor.html", data, context_instance=RequestContext(request))
 
 def editorUpload(request):
@@ -155,20 +156,6 @@ def mobileGetCan(request, canName):
 	data['canContent'] = convert(can.content)
 	return render_to_response("mobileGetCan.html", data, context_instance=RequestContext(request))
 
-
-import random
-
-def test(request):
-	user = models.User.objects.all()[0]
-	content = str(request.POST)
-	name = "TestCan" + str(random.randint(0,100))
-	new_can = models.Cans.objects.create(name=name, 
-										 owner=user, 
-										 content=content, 
-										 view_permission="public")
-	new_can.save()
-
-	return HttpResponse(json.dumps({}), content_type="application-json")
 
 ###################
 ##### HELPERS #####

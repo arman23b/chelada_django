@@ -76,8 +76,8 @@
 				<label class="uk-form-label" for="form-h-it">Viewing permission</label>
 				<div class="uk-form-controls">
 					<select id='viewing-permission'>
-						<option value="private">Private - Anyone with a link can view</option>
 						<option value="public">Public - Anyone can view in Public Feeds page</option>
+						<option value="private">Private - Anyone with a link can view</option>
 					</select>
 				</div>
 			</div>
@@ -139,15 +139,17 @@
 	</div>		
 </div>
 
+{% if cansData|length == 0 %}
 <div id='welcome-title'>To start, create a new Feed and a Task in that Feed</div>
+{% endif %}
 
 <div id='editor'>
 	<div id='cans-browser'>
 		<div id='managing-cans'>
 			<div>Feeds shared with you</div>
 			<ul>
-				{% for can in cans %}
-				<li class='shared-can'><a href='/browse/browse/id'> {{ can.name }} </a></li>
+				{% for sharedCan in sharedCans %}
+				<li class='shared-can'><a href='/browse/browse/id'> {{ sharedCan.name }} </a></li>
 				{% endfor %}
 			</ul>
 		</div>
