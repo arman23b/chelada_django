@@ -2,37 +2,10 @@
 
 {% block body %}
 
-<div id='title-bar'>
-	<div id='title-bar-content' style='line-height: 30px' class="uk-grid">
-		<span id='chelada-title' class="uk-width-2-10">
-			<a href='/'>Chelada</a>
-		</span>
-
-		<span id='browse' class="uk-width-3-10">
-			<a href='/browse'>Browse Public Feeds</a>
-		</span>
-
-		<span id='issues' class="uk-width-3-10">
-			<a href='/issues'>Bug Tracker</a>
-		</span>
-
-		{% if user.is_authenticated %}
-        <span id='logged-in-logout' class="uk-width-2-10">
-            <div class="uk-button-dropdown" data-uk-dropdown>
-                Welcome,
-                <a href='/editor' id='logged-in-user' user-id={{ user.id }} class="uk-button">{{ user.first_name }}</a>
-
-                <div class="uk-dropdown uk-dropdown-small">
-                    <ul class="uk-nav uk-nav-dropdown">
-                        <li><a href='/user/logout'>Log out</a></li>
-                    </ul>
-                </div>
-
-            </div>
-		</span>
-		{% endif %}
-	</div>
-</div> 
+<div id="header">
+	{% include "header.html" %}
+	{% load input_type %}
+</div>
 
 <div id='shade'></div>
 
