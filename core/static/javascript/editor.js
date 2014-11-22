@@ -47,10 +47,18 @@ $(document).ready(function() {
 });
 
 function chooseCansToExport() {
-    $('#cans-container').html('');
+    $('#cans-container-export').html('');
     var json = $('body').data('json');
     json.forEach(function (e) {
-        $('#cans-container').append('<label><input type="checkbox" value="' + e['can-name'] + '">' + e['can-name'] + "</label><br/>");
+        $('#cans-container-export').append('<label><input type="checkbox" value="' + e['can-name'] + '">' + e['can-name'] + "</label><br/>");
+    });
+}
+
+function chooseCansToLink() {
+    $('#cans-container-link').html('');
+    var json = $('body').data('json');
+    json.forEach(function (e) {
+        $('#cans-container-link').append('<label><input type="checkbox" value="' + e['can-name'] + '">' + e['can-name'] + "</label><br/>");
     });
 }
 
@@ -66,6 +74,37 @@ function exportCans() {
     });
     $('#modal-json-viewer #json-area').text(JSON.stringify(toExport));
     (new $.UIkit.modal.Modal("#modal-json-viewer")).show();
+}
+
+function linkCans() {
+    closeModal($('#modal-cans-link'));
+    var newJson = jQuery.extend([], $('body').data('json')); // Deep copy, or .data will be changed
+    var json = stripTokens(newJson);
+    var toSend = [];
+    json.forEach(function (e) {
+        var canName = e['can-name'];
+        if ($('#modal-cans-link input[value="' + canName + '"]').is(':checked'))
+            toSend.push(canName);
+    });
+    var recipient = $('#email-recipient').val();
+
+    $.ajax({
+        'url': '/sendCans',
+        'type': 'POST',
+        'dataType': 'json',
+        'data': {recipient: recipient, cans: JSON.stringify(toSend)},
+        'success': function(data) {
+            var result = data['result']
+            if (result == 0)
+                toastr.error('Wrong email format')
+            else  
+                toastr.success('Email sent successfully to ' + recipient);
+        },
+        'error': function(data) {
+            console.log(JSON.stringify(data));
+            toastr.error('Failed to send email');
+        }
+    });
 }
 
 function markAsContentChanged() {

@@ -11,7 +11,7 @@
 	{% if cans|length != 0 %}
 	<div id='public-cans'>
 		{% for can in cans %}
-		<div><a href='/browse/browse/id'> {{ can.name }} </a></div>
+		<div><a href='/browse/{{ can.id }}'> {{ can.name }} </a></div>
 		{% endfor %}
 	</div>
 	{% endif %}

@@ -109,10 +109,28 @@
 	<div class="uk-modal-dialog">
 		<a class="uk-modal-close uk-close"></a>
 		<h2>Choose Feeds to Export</h2>
-		<form id='cans-container'>
+		<form id='cans-container-export'>
 		</form>
 		<div class="modal-btn-done">
 			<button class="uk-button uk-button-primary submit" onclick='exportCans();' type="button">Done</button>
+		</div>
+	</div>
+</div>
+
+<div class="uk-modal" id='modal-cans-link'>
+	<div class="uk-modal-dialog">
+		<a class="uk-modal-close uk-close"></a>
+		<h2>Choose Feeds to Send the Link</h2>
+		<div class="uk-form-row">
+			<label class="uk-form-label" for="form-h-it">Email Recipient</label>
+			<div class="uk-form-controls">
+				<input id="email-recipient" />
+			</div>
+		</div>
+		<form id='cans-container-link'>
+		</form>
+		<div class="modal-btn-done">
+			<button class="uk-button uk-button-primary submit" onclick='linkCans();' type="button">Done</button>
 		</div>
 	</div>
 </div>
@@ -135,7 +153,7 @@
 				<ul>
 					<li id='share-export'><a href='#modal-cans-export' onclick="chooseCansToExport();" data-uk-modal>Export JSON File</a></li>
 					<!-- <li id='share-email'><a href='javascript:;'>Email</a></li> -->
-					<!-- <li id='share-link'><a href='javascript:;'>Link</a></li> -->
+					<li id='share-link'><a href='#modal-cans-link' onclick="chooseCansToLink();" data-uk-modal>Email Links</a></li>
 				</ul>
 			</span>
 			<span id='import-json'><a href='#modal-paste-json' data-uk-modal><img>Import Chelada JSON</a></span>
@@ -153,7 +171,7 @@
 			<div>Feeds shared with you</div>
 			<ul>
 				{% for sharedCan in sharedCans %}
-				<li class='shared-can'><a href='/browse/browse/id'> {{ sharedCan.name }} </a></li>
+				<li class='shared-can'><a href="/browse/{{ sharedCan.id }}"> {{ sharedCan.name }} </a></li>
 				{% endfor %}
 			</ul>
 		</div>

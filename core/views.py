@@ -1,4 +1,5 @@
 from django.http import HttpResponse, HttpResponseRedirect
+from django.conf import settings
 from django.contrib.auth import models, authenticate, login, logout
 from core import models
 from django.shortcuts import get_object_or_404, render_to_response, redirect
@@ -8,6 +9,7 @@ from django import forms
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.db.models import Q
+from django.core.mail import send_mail
 
 from collections import OrderedDict
 
@@ -127,10 +129,10 @@ def browse(request):
 	data['cans'] = cans
 	return render_to_response("browse.html", data, context_instance=RequestContext(request))
 
-def browseLook(request):
+def browseLook(request, id):
 	user = request.user
 	data = {}
-	cans = models.Cans.objects.filter(view_permission="public").order_by('id')
+	cans = models.Cans.objects.filter(id=id, view_permission="public").order_by('id')
 
 	data['user'] = user
 	data['cans'] = cans
@@ -155,6 +157,34 @@ def mobileGetCan(request, canName):
 	can = models.Cans.objects.get(name=canName, view_permission="public")
 	data['canContent'] = convert(can.content)
 	return render_to_response("mobileGetCan.html", data, context_instance=RequestContext(request))
+
+
+##################
+#####  Email  ####
+##################
+def sendCans(request):
+	response_data = {}
+	user = request.user
+	
+	recipient = request.POST['recipient']
+	cansToSend = request.POST['cans']
+
+	if not validateEmail(recipient):
+		response_data['result'] = 0;
+	else:
+		response_data['result'] = 1;
+
+	links = ""
+	for can in json.loads(cansToSend):
+		can = can.replace(" ", "%20")
+		links += "http://chelada-web.herokuapp.com/mobile/getcan/canname/%s\n\n" % (can)
+	subject = "%s is sharing Chelada feeds with you" % (user.first_name)
+	message = """%s %s would like to share these Chelada Feeds with you: \n\n%s""" % (user.first_name, user.last_name, links)
+	htmlmessage = "<html><body>%s</body></html>" % (message)
+
+	send_mail(subject, message, 'Chelada Team', [recipient])
+
+	return HttpResponse(json.dumps(response_data), content_type="application-json")	
 
 
 ###################
