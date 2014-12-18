@@ -130,6 +130,7 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'core',
     'acra',
+    'gcm',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -176,8 +177,12 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'core/static'),
 )
 
+# Gmail settings
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'cheladacmu@gmail.com'
 EMAIL_HOST_PASSWORD = 'cheladajson'
 EMAIL_USE_TLS = True
+
+# Google Cloud Messaging
+GCM_APIKEY = "AIzaSyCiELRAAyXmWlACX1n1E3X-0rCyGm3hN9Y"
