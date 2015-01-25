@@ -14,5 +14,4 @@ urlpatterns = patterns('',
     url(r'^mobile/listcans$', views.mobileListCans, name='mobileListCans'),
     url(r'^mobile/getcan/canname/(?P<canName>[\w|\W]+)$', views.mobileGetCan, name='mobileGetCan'),
     url(r'^sendCans$', views.sendCans, name='sendCans'),
-    url(r'^testGCM$', views.testGCM, name='sendGCM'),
 )

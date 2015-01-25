@@ -158,14 +158,6 @@ def mobileGetCan(request, canName):
 	data['canContent'] = convert(can.content)
 	return render_to_response("mobileGetCan.html", data, context_instance=RequestContext(request))
 
-def testGCM(request):
-	if request.method == "GET":
-		print "GET request"
-	else:
-		print request.POST
-	return HttpResponse("")
-
-
 
 ##################
 #####  Email  ####
