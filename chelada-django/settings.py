@@ -185,4 +185,4 @@ EMAIL_HOST_PASSWORD = 'cheladajson'
 EMAIL_USE_TLS = True
 
 # Google Cloud Messaging
-GCM_APIKEY = "AIzaSyCiELRAAyXmWlACX1n1E3X-0rCyGm3hN9Y"
+GCM_APIKEY = "AIzaSyB-PGdI_8H1N1aV596AqmmQBOR-zaiken0"
