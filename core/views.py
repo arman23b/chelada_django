@@ -160,7 +160,7 @@ def mobileGetCan(request, canName):
 
 def gcmRegister(request):
 	if request.method == "POST":
-		data = request.body
+		data = json.loads(request.body)
 		print "Received from phone device: " + data
 		name = data["name"]
 		reg_id = data["reg_id"]
