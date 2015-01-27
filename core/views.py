@@ -160,14 +160,14 @@ def mobileGetCan(request, canName):
 
 def gcmRegister(request):
 	if request.method == "POST":
-		print request.POST
-		name = request.POST["name"]
-		reg_id = request.POST["reg_id"]
-		dev_id = request.POST["dev_id"]
-		new_phone_device = models.PhoneDevice.objects.create(name=name, reg_id=reg_id, dev_id=dev_id)
-		new_phone_device.save()
+		print request.body
+		# name = request.POST["name"]
+		# reg_id = request.POST["reg_id"]
+		# dev_id = request.POST["dev_id"]
+		# new_phone_device = models.PhoneDevice.objects.create(name=name, reg_id=reg_id, dev_id=dev_id)
+		# new_phone_device.save()
 
-		sendGCMMessage(reg_id, {"hello" : "from Arman"})
+		# sendGCMMessage(reg_id, {"hello" : "from Arman"})
 	return HttpResponse("")	
 
 
