@@ -207,9 +207,10 @@ def sendCans(request):
 def sendGCMMessage(reg_id, data):
 	url = "https://android.googleapis.com/gcm/send"
 	opener = urllib2.build_opener(urllib2.HTTPHandler)
-	request = urllib2.Request(url, data=json.dumps(data))
+	message = {"data" : data, "registration_ids" : [reg_id]}
+	request = urllib2.Request(url, data=json.dumps(message))
 	request.add_header("Content-Type", "application/json")
-	request.add_header("Authorization", settings.GCM_APIKEY)
+	request.add_header("Authorization", "key="+settings.GCM_APIKEY)
 	result = opener.open(request)
 	return result.getcode() == 200
 
