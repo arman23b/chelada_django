@@ -160,6 +160,7 @@ def mobileGetCan(request, canName):
 
 def gcmRegister(request):
 	if request.method == "POST":
+		print request.POST
 		name = request.POST["name"]
 		reg_id = request.POST["reg_id"]
 		dev_id = request.POST["dev_id"]
