@@ -13,7 +13,7 @@ from django.core.mail import send_mail
 
 from collections import OrderedDict
 
-import json, unicodedata
+import json, unicodedata, urllib2
 
 #################
 ##### FORMS #####
@@ -158,6 +158,17 @@ def mobileGetCan(request, canName):
 	data['canContent'] = convert(can.content)
 	return render_to_response("mobileGetCan.html", data, context_instance=RequestContext(request))
 
+def gcmRegister(request):
+	if request.method == "POST":
+		name = request.POST["name"]
+		reg_id = request.POST["reg_id"]
+		dev_id = request.POST["dev_id"]
+		new_phone_device = models.PhoneDevice.objects.create(name=name, reg_id=reg_id, dev_id=dev_id)
+		new_phone_device.save()
+
+		sendGCMMessage(reg_id, {"hello" : "from Arman"})
+	return HttpResponse("")	
+
 
 ##################
 #####  Email  ####
@@ -190,6 +201,15 @@ def sendCans(request):
 ###################
 ##### HELPERS #####
 ###################
+
+def sendGCMMessage(reg_id, data):
+	url = "https://android.googleapis.com/gcm/send"
+	opener = urllib2.build_opener(urllib2.HTTPHandler)
+	request = urllib2.Request(url, data=json.dumps(data))
+	request.add_header("Content-Type", "application/json")
+	request.add_header("Authorization", settings.GCM_APIKEY)
+	result = opener.open(request)
+	return result.getcode() == 200
 
 def getCansData(cans):
 	if len(cans) == 0:
