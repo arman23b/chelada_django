@@ -165,8 +165,11 @@ def gcmRegister(request):
 		name = data["name"]
 		reg_id = data["reg_id"]
 		dev_id = data["dev_id"]
-		new_phone_device = models.PhoneDevice.objects.create(name=name, reg_id=reg_id, dev_id=dev_id)
-		new_phone_device.save()
+		# Check if a phone with this reg_id already exists
+		existing_phones = models.PhoneDevice.objects.filter(reg_id=reg_id)
+		if len(existing_phones) == 0:
+			new_phone_device = models.PhoneDevice.objects.create(name=name, reg_id=reg_id, dev_id=dev_id)
+			new_phone_device.save()
 
 		sendGCMMessage(reg_id, {"hello" : "from Arman"})
 	return HttpResponse("")	
