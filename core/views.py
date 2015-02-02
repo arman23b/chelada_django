@@ -163,21 +163,26 @@ def gcmRegister(request):
         data = json.loads(request.body)
         print "Received from phone device: " + str(data)
         name = data["name"]
+        email = data["email"]
         reg_id = data["reg_id"]
         dev_id = data["dev_id"]
         # Check if a phone with this reg_id already exists
         existing_phones = models.PhoneDevice.objects.filter(reg_id=reg_id)
-        if len(existing_phones) == 0:
-            new_phone_device = models.PhoneDevice.objects.create(name=name, reg_id=reg_id, dev_id=dev_id)
+        user = models.ConsumerAccount.objects.get(email=email)
+        if len(existing_phones) == 0 and user is None:
+            new_consumer_account = models.ConsumerAccount.objects.create(name=name, email=email, phone="no_entry")
+            new_consumer_account.save()
+            new_phone_device = models.PhoneDevice.objects.create(name=name, reg_id=reg_id, dev_id=dev_id, account=new_consumer_account)
             new_phone_device.save()
+            sendGCMMessage(reg_id, {"hello" : "from Arman"})
 
-        sendGCMMessage(reg_id, {"hello" : "from Arman"})
     return HttpResponse("") 
 
 
 ##################
 #####  Email  ####
 ##################
+
 def sendCans(request):
     response_data = {}
     user = request.user
@@ -200,7 +205,15 @@ def sendCans(request):
 
     send_mail(subject, message, 'Chelada Team', [recipient])
 
-    return HttpResponse(json.dumps(response_data), content_type="application-json") 
+    return HttpResponse(json.dumps(response_data), content_type="application-json")
+
+
+###################
+####### APIS ######
+###################
+
+def producerSend(request):
+    return
 
 
 ###################
