@@ -213,7 +213,19 @@ def sendCans(request):
 ###################
 
 def producerSend(request):
-    return
+    if request.method == "POST":
+        data = json.loads(request.body)
+        print "API request: adding feed " + str(data)
+        username = data["username"]
+        name = data["can-name"]
+        content = data["feed"]
+        user = models.User.objects.get(username=username)
+        new_feed = models.Cans.objects.create(name=name, 
+                                              owner=user, 
+                                              content=content, 
+                                              view_permission="public")
+        new_feed.save()
+    return HttpResponse("")
 
 
 ###################

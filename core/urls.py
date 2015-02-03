@@ -13,6 +13,6 @@ urlpatterns = patterns('',
     url(r'^browse/(?P<id>[\d]+)$', views.browseLook, name='browseLook'),
     url(r'^mobile/listcans$', views.mobileListCans, name='mobileListCans'),
     url(r'^mobile/getcan/canname/(?P<canName>[\w|\W]+)$', views.mobileGetCan, name='mobileGetCan'),
-    url(r'^sendCans$', views.sendCans, name='sendCans'),
     url(r'^gcm/register$', views.gcmRegister, name='gcmRegister'),
+    url(r'^addFeed$', views.producerSend, name='producerSend'),
 )
