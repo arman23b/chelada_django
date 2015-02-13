@@ -99,22 +99,24 @@ def editorUpload(request):
     user = request.user
     decoded = json.loads(request.POST['json'],object_pairs_hook=OrderedDict)
 
-    # Option 1. Delete all cans and create new to account for name edits
-    # Option 2. Restrict changing can names as they are used as primary keys in DB
-
-    models.Cans.objects.filter(owner=user).delete()
-
     for canData in decoded:
         name = canData['can-name']
         view_permission = canData.get('view-permission', "public")
         content = json.dumps(canData)
-        new_can = models.Cans.objects.create(name=name, 
-                                             owner=user, 
-                                             content=content, 
-                                             view_permission=view_permission)
-        new_can.save()  
-    return HttpResponse(json.dumps(response_data), content_type="application-json")
 
+        try:
+            can = models.Cans.objects.get(name=name, owner=user)
+            can.content = content
+            can.view_permission = view_permission
+            can.save()
+            updateConsumers(can)
+        except ObjectDoesNotExist:
+            new_can = models.Cans.objects.create(name=name, 
+                                                 owner=user, 
+                                                 content=content, 
+                                                 view_permission=view_permission)
+            new_can.save()  
+    return HttpResponse(json.dumps(response_data), content_type="application-json")
 
 #################
 #### Browse #####
