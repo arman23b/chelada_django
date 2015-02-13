@@ -7,7 +7,7 @@ from django.template import RequestContext
 
 from django import forms
 from django.core.validators import validate_email
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.db.models import Q
 from django.core.mail import send_mail
 
@@ -156,6 +156,20 @@ def mobileGetCan(request, canName):
     canName = canName.replace("+", " ")
     can = models.Cans.objects.get(name=canName, view_permission="public")
     data['canContent'] = convert(can.content)
+    
+    if request.method == "POST":
+        # Save that consumer
+        info = json.loads(request.body)
+        reg_id = info["reg_id"]
+        print "Got reg_id in POST request"
+        phone_devices = models.PhoneDevice.objects.filter(reg_id=reg_id)
+        if len(phone_devices) != 0:
+            phone_device = phone_devices[0]
+            consumer = phone_device.account
+            can.consumers.add(consumer)
+        else:
+            print "No phone with reg_id " + reg_id + " is found"
+
     return render_to_response("mobileGetCan.html", data, context_instance=RequestContext(request))
 
 def gcmRegister(request):
@@ -168,15 +182,56 @@ def gcmRegister(request):
         dev_id = data["dev_id"]
         # Check if a phone with this reg_id already exists
         existing_phones = models.PhoneDevice.objects.filter(reg_id=reg_id)
-        user = models.ConsumerAccount.objects.get(email=email)
-        if len(existing_phones) == 0 and user is None:
-            new_consumer_account = models.ConsumerAccount.objects.create(name=name, email=email, phone="no_entry")
-            new_consumer_account.save()
-            new_phone_device = models.PhoneDevice.objects.create(name=name, reg_id=reg_id, dev_id=dev_id, account=new_consumer_account)
-            new_phone_device.save()
-            sendGCMMessage(reg_id, {"hello" : "from Arman"})
+        if len(existing_phones) == 0:
+            # Check if consumer account for email exists
+            users = models.ConsumerAccount.objects.filter(email=email)
+            if len(users) == 0:
+                consumer_account = models.ConsumerAccount.objects.create(name=name, 
+                                                                         email=email, 
+                                                                         phone="no_entry")
+                consumer_account.save()
+                print "New consumer account created"
+            else:
+                consumer_account = users[0]
 
-    return HttpResponse("") 
+            new_phone_device = models.PhoneDevice.objects.create(name=name, 
+                                                                 reg_id=reg_id, 
+                                                                 dev_id=dev_id, 
+                                                                 account=consumer_account)
+            new_phone_device.save()
+            print "New device registered"
+
+    return HttpResponse("")
+
+def loginConsumer(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        consumerEmail = data["email"]
+        consumerPassword = data["password"]
+
+        response_data = {}
+
+        try:
+            consumer = models.ConsumerAccount.objects.get(email=consumerEmail)
+            response_data["result"] = "OK"
+        except ObjectDoesNotExist:
+            response_data["result"] = "NOUSER"
+
+        return HttpResponse(json.dumps(response_data), content_type="application-json")
+
+def registerConsumer(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        consumerEmail = data["email"]
+        consumerPassword = data["password"]
+
+        consumer_account = models.ConsumerAccount.objects.create(name="no_entry", 
+                                                                 email=consumerEmail,
+                                                                 phone="no_entry")
+        consumer_account.save()
+        print "New consumer account created"
+
+    return HttpResponse("")        
 
 
 ##################
@@ -220,17 +275,38 @@ def producerSend(request):
         name = data["can-name"]
         content = data["feed"]
         user = models.User.objects.get(username=username)
-        new_feed = models.Cans.objects.create(name=name, 
-                                              owner=user, 
-                                              content=content, 
-                                              view_permission="public")
-        new_feed.save()
+
+        old_feeds = models.Cans.objects.filter(name=name,
+                                               owner=user)
+
+        if len(old_feeds) == 0:
+            print "Creating a new feed"
+            new_feed = models.Cans.objects.create(name=name, 
+                                                  owner=user, 
+                                                  content=content, 
+                                                  view_permission="public") 
+            new_feed.save()
+        else:
+            print "Updating existing feed"
+            old_feed = old_feeds[0]
+            old_feed.content = content
+            old_feed.save()
+            updateConsumers(old_feed)
+            
+
     return HttpResponse("")
 
 
 ###################
 ##### HELPERS #####
 ###################
+
+def updateConsumers(feed):
+    for consumer in feed.consumers.all():
+        print "Feed " + feed.name + " : updating consumers"
+        phone_device = consumer.phonedevice_set.all()[0]
+        sendGCMMessage(phone_device.reg_id, {"feed" : feed.content})
+    return
 
 def sendGCMMessage(reg_id, data):
     url = "https://android.googleapis.com/gcm/send"
@@ -240,7 +316,11 @@ def sendGCMMessage(reg_id, data):
     request.add_header("Content-Type", "application/json")
     request.add_header("Authorization", "key="+settings.GCM_APIKEY)
     result = opener.open(request)
-    return result.getcode() == 200
+    if result.getcode() == 200:
+        print "Successfully sent GCM message: " + str(data)
+        print result.read()
+        return True
+    return False
 
 def getCansData(cans):
     if len(cans) == 0:

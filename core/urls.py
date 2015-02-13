@@ -15,4 +15,6 @@ urlpatterns = patterns('',
     url(r'^mobile/getcan/canname/(?P<canName>[\w|\W]+)$', views.mobileGetCan, name='mobileGetCan'),
     url(r'^gcm/register$', views.gcmRegister, name='gcmRegister'),
     url(r'^addFeed$', views.producerSend, name='producerSend'),
+    url(r'^loginConsumer$', views.loginConsumer, name='loginConsumer'),
+    url(r'^registerConsumer$', views.registerConsumer, name='registerConsumer'),
 )

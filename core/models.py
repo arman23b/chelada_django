@@ -7,12 +7,15 @@ class ConsumerAccount(models.Model):
     name = models.CharField(max_length=100)
     email = models.CharField(max_length=100, unique=True)
     phone = models.CharField(max_length=100)
+    class Meta:
+        db_table = 'consumer_account'
 
 class Cans(models.Model):
     name = models.CharField(max_length=50L)
     owner = models.ForeignKey(User)
     content = models.TextField()
     view_permission = models.CharField(max_length=10L) # public or private
+    consumers = models.ManyToManyField(ConsumerAccount, null=True)
     class Meta:
         db_table = 'cans'
 
