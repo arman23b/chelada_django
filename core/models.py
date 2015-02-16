@@ -23,6 +23,6 @@ class PhoneDevice(models.Model):
     name = models.CharField(max_length=100)
     reg_id = models.TextField()
     dev_id = models.CharField(max_length=255)
-    account = models.ForeignKey(ConsumerAccount)
+    account = models.ForeignKey(ConsumerAccount, null=True)
     class Meta:
         db_table = "phone_device"
