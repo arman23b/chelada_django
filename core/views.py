@@ -319,7 +319,7 @@ def sendGCMMessage(reg_id, data):
     request.add_header("Authorization", "key="+settings.GCM_APIKEY)
     result = opener.open(request)
     if result.getcode() == 200:
-        print "Successfully sent GCM message: " + str(data)
+        print "Successfully sent GCM message: " + str(data) + " to " + reg_id
         print result.read()
         return True
     return False
