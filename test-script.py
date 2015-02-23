@@ -1,7 +1,7 @@
 import urllib2, json
 
 def testSendFeed(username, can_name, feed):
-    url = "http://localhost:8000/addFeed"
+    url = "http://chelada-web.herokuapp.com/addFeed"
     opener = urllib2.build_opener(urllib2.HTTPHandler)
     message = {"username" : username, "can-name" : can_name, "feed" : feed}
     request = urllib2.Request(url, data=json.dumps(message))

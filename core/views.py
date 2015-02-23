@@ -14,6 +14,7 @@ from django.core.mail import send_mail
 from collections import OrderedDict
 
 import json, unicodedata, urllib2
+from passlib.hash import pbkdf2_sha256
 
 #################
 ##### FORMS #####
@@ -188,9 +189,7 @@ def gcmRegister(request):
             # Check if consumer account for email exists
             users = models.ConsumerAccount.objects.filter(email=email)
             if len(users) == 0:
-                consumer_account = models.ConsumerAccount.objects.create(name=name, 
-                                                                         email=email, 
-                                                                         phone="no_entry")
+                consumer_account = models.ConsumerAccount.objects.create(email=email)
                 consumer_account.save()
                 print "New consumer account created"
             else:
@@ -213,11 +212,17 @@ def loginConsumer(request):
 
         response_data = {}
 
+        print "Consumer " + consumerEmail + " tries to login"
         try:
             consumer = models.ConsumerAccount.objects.get(email=consumerEmail)
-            response_data["result"] = "OK"
+            if pbkdf2_sha256.verify(consumerPassword, consumer.passwordHash):
+                response_data["result"] = "OK"
+            else:
+                response_data["result"] = "DENY"
         except ObjectDoesNotExist:
             response_data["result"] = "NOUSER"
+
+        print "Login result: " + response_data["result"] 
 
         return HttpResponse(json.dumps(response_data), content_type="application-json")
 
@@ -225,13 +230,12 @@ def registerConsumer(request):
     if request.method == "POST":
         data = json.loads(request.body)
         consumerEmail = data["email"]
-        consumerPassword = data["password"]
+        consumerPasswordHash = pbkdf2_sha256.encrypt(data["password"] , rounds=200000, salt_size=16)
 
-        consumer_account = models.ConsumerAccount.objects.create(name="no_entry", 
-                                                                 email=consumerEmail,
-                                                                 phone="no_entry")
+        consumer_account = models.ConsumerAccount.objects.create(email=consumerEmail,
+                                                                 passwordHash=consumerPasswordHash)
         consumer_account.save()
-        print "New consumer account created"
+        print "New consumer account created: " + consumerEmail
 
     return HttpResponse("")        
 
