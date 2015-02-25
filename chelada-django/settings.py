@@ -114,8 +114,10 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    "core/templates"
+    "core/templates",
 )
+
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -130,7 +132,6 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'core',
     'acra',
-    'gcm',
 )
 
 # A sample logging configuration. The only tangible logging
