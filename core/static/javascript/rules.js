@@ -1,4 +1,4 @@
-/***************************** Triggers part code ********************/
+/***************************** Rules part code ********************/
 
 var statCount = 0;
 
@@ -95,7 +95,7 @@ function optionsClickHandler(statNum) {
 
         appendIfOptions(name, choosespan, statNum, $(this));
 
-        saveTriggers();
+        saveRules();
     });
 }
 
@@ -189,7 +189,7 @@ function appendIfOptions(name, choosespan, statNum, $this, disabled) {
             $(this).css({'font-style' : 'normal', 'color' : '#6d6e70'});
             $(this).off('focus');
         }
-        saveTriggers();
+        saveRules();
     });
 
     // At the time when document is just ready, .options is not created yet, so have to create handler here again
@@ -279,7 +279,7 @@ function attachDeleteThenHandler(statNum) {
 
         });
 
-        saveTriggers();
+        saveRules();
     });
 }
 
@@ -370,7 +370,7 @@ function appendThenOptions(tdThisThen, statNum, name, disableAnimation) {
             $(this).css({'font-style' : 'normal', 'color' : '#6d6e70'});
             $(this).off('click');
         }
-        saveTriggers();
+        saveRules();
     });
 }
 
@@ -390,7 +390,7 @@ function andIfHandler(statNum) {
     // Attach delete button handler
     $('#stat' + statNum + ' .block:last .delete').click(function (e) {
         deleteBlock($(this), statNum);
-        saveTriggers();
+        saveRules();
     });
 }
 
@@ -476,11 +476,11 @@ function initStatement(anim) {
     // Create a new statement
     statCount++;
     var statementString = "<div class='stats' style='opacity: 0' id='stat" + statCount + "'>";
-    statementString += "<table><tr><td id='triggertd'><span class='triggeradd' style='display: inline-table;'>";
-    statementString += "<div class='trigger'><label class='labels'>Trigger<div class='delete'><i class='fa fa-minus-circle'></i></div></label></div></div>";
+    statementString += "<table><tr><td id='ruletd'><span class='ruleadd' style='display: inline-table;'>";
+    statementString += "<div class='rule'><label class='labels'>Rule<div class='delete'><i class='fa fa-minus-circle'></i></div></label></div></div>";
     statementString += "<div class='addline'><label class='plustext'>+</label></div></span></td>";
     statementString += "<td class='blocktd'>" + blockStr + "</td></tr></table></div>";
-    $('#triggers').append(statementString);
+    $('#rules').append(statementString);
 
     $('.stats:last .blocktd .block:first').attr('style', 'position: relative; left: -35px;');
     $('.stats:last .blocktd .choose').attr('style', 'position: relative; left: -50px;');
@@ -505,9 +505,9 @@ function initStatement(anim) {
     addlineHandler(thisStat);
 
     // Bind handler for .delete
-    $('#stat' + thisStat + ' .trigger .delete').click(function (e) {
+    $('#stat' + thisStat + ' .rule .delete').click(function (e) {
         deleteStatement(thisStat);
-        saveTriggers();
+        saveRules();
     });
 
     andIfHandler(thisStat);
@@ -566,11 +566,11 @@ function storeOptionsData(thisBlock, options, arr) {
 }
 
 /**
- * Parse JSON from HTML Triggers.
+ * Parse JSON from HTML Rules.
  * @returns {JSON Array} if successful
  *          1 if error is raised
  */
-function getJSONFromTriggers() {
+function getJSONFromRules() {
     var jsonExport = [];
 
     try {
@@ -697,10 +697,10 @@ function getJSONFromTriggers() {
 }
 
 /**
- *  @param data: Valid non-empty JSON object representing a single Task
+ *  @param data: Valid non-empty JSON object representing a single Item
  *  @returns null, print the result to workspace
  */
-function printJSONToTriggers(data) {
+function printJSONToRules(data) {
     try {
         var statNum = 0;
 

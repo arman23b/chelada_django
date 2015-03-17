@@ -1,4 +1,4 @@
-var activeCan = null;
+var activeFeed = null;
 
 $(document).ready(function() {
 	$('*:not(body, #shade)').off('click'); /* Without this, click will be registered twice for some buttons */
@@ -7,13 +7,13 @@ $(document).ready(function() {
 		showDialog($('#report-bug-dialog'));
 	});
 	
-	var initialData = $('#initial-cans-storage').html();
+	var initialData = $('#initial-feeds-storage').html();
 	if (initialData.length != 0)
 		$('body').data('json', $.parseJSON(initialData));
 	else
 		$('body').data('json', []);
 	
-	loadCansToWorkspace();
+	loadFeedsToWorkspace();
 });
 
 function submitBug() {
@@ -32,24 +32,24 @@ function submitBug() {
 	});
 }
 
-function getCanObjByName(canName) {
+function getFeedObjByName(feedName) {
 	var result = null;
-	$('.can').each(function () {
-		if ($(this).data('can-name') == canName)
+	$('.feed').each(function () {
+		if ($(this).data('feed-name') == feedName)
 			result = $(this);
 	});
 	if (result == null) {
-		toastr.error('Error retrieving Can name.');
+		toastr.error('Error retrieving Feed name.');
 		return null;
 	}
 	else
 		return result;
 }
 
-function getTaskObjByNameAndCan(objCan, taskName) {
+function getItemObjByNameAndFeed(objFeed, itemName) {
 	var result = null;
-	objCan.find('.task').each(function () {
-		if ($(this).find('a').text() == taskName)
+	objFeed.find('.item').each(function () {
+		if ($(this).find('a').text() == itemName)
 			result = $(this);
 	});
 	if (result == null) {
@@ -59,213 +59,213 @@ function getTaskObjByNameAndCan(objCan, taskName) {
 		return result;
 }
 
-function getNumOfCans() {
+function getNumOfFeeds() {
 	var json = $('body').data('json');
 	return json.length;
 }
 
-/* @returns null if the Can specified is not found locally
-			or the JSON object the name of which is canName.
+/* @returns null if the Feed specified is not found locally
+			or the JSON object the name of which is feedName.
 */
-function getCan(canName) {
+function getFeed(feedName) {
 	result = null;
 	var json = $('body').data('json');
 	json.forEach(function (e, i, arr) {
-		if (e['can-name'] == canName)
+		if (e['feed-name'] == feedName)
 			result = e;
 	});
 	
 	return result;
 }
 
-function getTaskInCan(taskName, can) {
-	var tasks = can['tasks'];
-	taskToReturn = null;
-	tasks.forEach(function (e, i, arr) {
-		if (e['task-name'] == taskName)
-			taskToReturn = e; // Passing by address?
+function getItemInFeed(itemName, feed) {
+	var items = feed['items'];
+	itemToReturn = null;
+	items.forEach(function (e, i, arr) {
+		if (e['item-name'] == itemName)
+			itemToReturn = e; // Passing by address?
 	});
 
-	return taskToReturn;
+	return itemToReturn;
 }
 
-/* Check if name of the Can is used already,
+/* Check if name of the Feed is used already,
    since it needs to be unique.
    Better way is to check with server.
 */
-function doesCanExist(canName) {
-	if (getNumOfCans() == 0)
+function doesFeedExist(feedName) {
+	if (getNumOfFeeds() == 0)
 		return false;
 	else {
-		if (getCan(canName) == null)
+		if (getFeed(feedName) == null)
 			return false;
 		else
 			return true;
 	}
 }
 
-/* @requires The Can specified exists.
+/* @requires The Feed specified exists.
 */
-function doesTaskInCanExist(canName, taskName) {
-	if (getNumOfTasksInCan(canName) == 0)
+function doesItemInFeedExist(feedName, itemName) {
+	if (getNumOfItemsInFeed(feedName) == 0)
 		return false;
 	else {
-		var tasks = getCan(canName)['tasks'];
-		taskFound = false;
-		tasks.forEach(function (e, i, arr) {
-			if (e['task-name'] == taskName)
-				taskFound = true;
+		var items = getFeed(feedName)['items'];
+		itemFound = false;
+		items.forEach(function (e, i, arr) {
+			if (e['item-name'] == itemName)
+				itemFound = true;
 		});
 		
-		return taskFound;
+		return itemFound;
 	}
 }
 
-function getNumOfTasksInCan(canName) {
+function getNumOfItemsInFeed(feedName) {
 	var json = $('body').data('json');
 	
-	numTasks = -1;
+	numItems = -1;
 	json.forEach(function (e, i, arr) {
-		if (e['can-name'] == canName) {
-			var tasks = e['tasks'];
-			numTasks = tasks.length;
-			/* Cannot return here; not returning from the parent function */
+		if (e['feed-name'] == feedName) {
+			var items = e['items'];
+			numItems = items.length;
+			/* Feednot return here; not returning from the parent function */
 		}
 	});
 	
-	if (numTasks == -1)
-		throw 'Can "' + canName + '" is not found.';
+	if (numItems == -1)
+		throw 'Feed "' + feedName + '" is not found.';
 	else
-		return numTasks;
+		return numItems;
 }
 
-/* @requires Number of Cans > 0
+/* @requires Number of Feeds > 0
 
 */
-function loadCansToWorkspace() {
-	if (getNumOfCans() == 0) {
-		$('#cans-browser').addClass('invisible');
-		$('#cans-browser').html('');
+function loadFeedsToWorkspace() {
+	if (getNumOfFeeds() == 0) {
+		$('#feeds-browser').addClass('invisible');
+		$('#feeds-browser').html('');
 		return;
 	}
 
-	$('#cans-browser').removeClass('invisible');
+	$('#feeds-browser').removeClass('invisible');
 
-	/* Purge old Cans */
-	$('.can').remove();
+	/* Purge old Feeds */
+	$('.feed').remove();
 	
 	var json = $('body').data('json');
 	json.forEach(function (e, i, arr) {
-		var canName = e['can-name'];
-		$('#cans-browser').prepend("<div id='can-" + i + "' class='can'><span class='can-title'><label>" + canName + "</label><a href='javascript:;' class='arrow'>▼</a></span><ul class='tasks'></ul></div>");
-		$('#can-' + i).data('can-name', canName); /* Store Can name again as data, for easy retrieval later */
-		loadTasksOfCan($('#can-' + i));
+		var feedName = e['feed-name'];
+		$('#feeds-browser').prepend("<div id='feed-" + i + "' class='feed'><span class='feed-title'><label>" + feedName + "</label><a href='javascript:;' class='arrow'>▼</a></span><ul class='items'></ul></div>");
+		$('#feed-' + i).data('feed-name', feedName); /* Store Feed name again as data, for easy retrieval later */
+		loadItemsOfFeed($('#feed-' + i));
 	});
 
-	$('.can .arrow').click(function () {
+	$('.feed .arrow').click(function () {
 		var expanded = $(this).data('expanded');
 		if (expanded == null || expanded == true) {
 			$(this).data('expanded', false);
 			$(this).text('►');
-			var can = $(this).parents('.can');
-			can.find('.tasks').addClass('gone');
+			var feed = $(this).parents('.feed');
+			feed.find('.items').addClass('gone');
 		}
 		else {
 			$(this).data('expanded', true);
 			$(this).text('▼');
-			var can = $(this).parents('.can');
-			can.find('.tasks').removeClass('gone');
+			var feed = $(this).parents('.feed');
+			feed.find('.items').removeClass('gone');
 		}
 	});
 	
-	var firstCanName = $('#can-0').data('can-name');
+	var firstFeedName = $('#feed-0').data('feed-name');
 
-	if (activeCan == null || doesCanExist(activeCan) == false)
-		activeCan = firstCanName;
+	if (activeFeed == null || doesFeedExist(activeFeed) == false)
+		activeFeed = firstFeedName;
 
-	markActiveTask();
+	markActiveItem();
 }
 
-function loadTasksOfCan(objCan) {
-	canName = objCan.data('can-name');
+function loadItemsOfFeed(objFeed) {
+	feedName = objFeed.data('feed-name');
 
-	if (activeCan == null) {
-		// Loading a new Can; purging the current workspace
-		$('#triggers').html('');
-		activeCan = canName;
-		activeTask = null;
+	if (activeFeed == null) {
+		// Loading a new Feed; purging the current workspace
+		$('#rules').html('');
+		activeFeed = feedName;
+		activeItem = null;
 	}
 
-	var targetCanUl = objCan.find('ul');
-	targetCanUl.html('');
+	var targetFeedUl = objFeed.find('ul');
+	targetFeedUl.html('');
 
 	$('body').data('json').forEach(function (e, i, arr) {
-		if (e['can-name'] == canName) {
-			if (e['tasks'] != null) {
-				e['tasks'].forEach(function (eTask, iTask, arrTask) {
-					targetCanUl.append("<li class='task'><a href='javascript: ;'>" + eTask['task-name'] + "</a><img class='edit'><img class='can-delete'></li>");
+		if (e['feed-name'] == feedName) {
+			if (e['items'] != null) {
+				e['items'].forEach(function (eItem, iItem, arrItem) {
+					targetFeedUl.append("<li class='item'><a href='javascript: ;'>" + eItem['item-name'] + "</a><img class='edit'><img class='feed-delete'></li>");
 				});
 			}
 		}
 	});
 
-	objCan.find('.task a').click(function () {
-		var canName = $(this).parents('.can').data('can-name');
-		if (canName != activeCan || $(this).text() != activeTask)
-			markActiveTask($(this).parent());
+	objFeed.find('.item a').click(function () {
+		var feedName = $(this).parents('.feed').data('feed-name');
+		if (feedName != activeFeed || $(this).text() != activeItem)
+			markActiveItem($(this).parent());
 	});
 }
 
-/* Mark the Task in Task List as active, and load triggers
-   in that Task.
+/* Mark the Item in Item List as active, and load rules
+   in that Item.
    Note that it will always reload; to prevent reloading loaded
-   triggers, do (activeTask == task) before calling this.
+   rules, do (activeItem == item) before calling this.
 */
-function markActiveTask(objTask) {
-	$('.task').removeClass('active-task');
+function markActiveItem(objItem) {
+	$('.item').removeClass('active-item');
 
-	if (objTask == null)
-		objTask = getTaskObjByNameAndCan(getCanObjByName(activeCan), activeTask);
+	if (objItem == null)
+		objItem = getItemObjByNameAndFeed(getFeedObjByName(activeFeed), activeItem);
 
-	if (objTask == null)
-		objTask = $('.task:first');
+	if (objItem == null)
+		objItem = $('.item:first');
 
-	if (objTask.length == 0) {
-		$('#triggers').html('');
+	if (objItem.length == 0) {
+		$('#rules').html('');
 		$('#welcome-title').css({'display': 'block'});
-		$('#active-task-name').html('');
+		$('#active-item-name').html('');
 	}
 	else {
 		$('#welcome-title').css({'display': 'none'});
-		var thisTaskName = objTask.find('a').text();
-		objTask.addClass('active-task');
-		activeTask = thisTaskName;
-		$('#active-task-name').html(activeTask);
-		activeCan = objTask.parents('.can').data('can-name');
-		loadActiveTaskTriggers();
+		var thisItemName = objItem.find('a').text();
+		objItem.addClass('active-item');
+		activeItem = thisItemName;
+		$('#active-item-name').html(activeItem);
+		activeFeed = objItem.parents('.feed').data('feed-name');
+		loadActiveItemRules();
 	}
 }
 
-function loadActiveTaskTriggers() {
-	$('#triggers').html('');
-	var task = getTaskInCan(activeTask, getCan(activeCan));
-	var triggers = task['triggers'];
-	if (triggers == undefined || triggers.length == 0)// If it's an empty Task, create new Triggers
+function loadActiveItemRules() {
+	$('#rules').html('');
+	var item = getItemInFeed(activeItem, getFeed(activeFeed));
+	var rules = item['rules'];
+	if (rules == undefined || rules.length == 0)// If it's an empty Item, create new Rules
 		initStatement();
 	else {
-		// Else, assume the Triggers are well-formed and parse
-		printJSONToTriggers(triggers);
+		// Else, assume the Rules are well-formed and parse
+		printJSONToRules(rules);
 
 
-		$('#triggers *').off('click');
-		$('#triggers *').attr('contenteditable','false');
-		$('#triggers ul').remove();
-		$('#triggers .block:last .addline').remove();
-		$('#triggers #thenblocks tr:last .andthen').remove();
-		$('#triggers .delete').remove();
+		$('#rules *').off('click');
+		$('#rules *').attr('contenteditable','false');
+		$('#rules ul').remove();
+		$('#rules .block:last .addline').remove();
+		$('#rules #thenblocks tr:last .andthen').remove();
+		$('#rules .delete').remove();
 	}
 }
 
-function saveTriggers() {
+function saveRules() {
 	// Dummy function
 }

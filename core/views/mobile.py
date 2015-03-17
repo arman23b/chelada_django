@@ -17,19 +17,19 @@ import json, unicodedata, urllib2
 from passlib.hash import pbkdf2_sha256
 
 
-def mobileListCans(request):
+def mobileListFeeds(request):
     data = {}
-    cans = models.Cans.objects.filter(view_permission="public").order_by('id')
-    data['cans'] = map(lambda x: convert(x.name), cans)
-    return render_to_response("mobileListCans.html", data, context_instance=RequestContext(request))
+    feeds = models.Feed.objects.filter(view_permission="public").order_by('id')
+    data['feeds'] = map(lambda x: convert(x.name), feeds)
+    return render_to_response("mobileListFeeds.html", data, context_instance=RequestContext(request))
 
 
-def mobileGetCan(request, canName):
+def mobileGetFeed(request, feedName):
     data = {}
     # Change "+" to space
-    canName = canName.replace("+", " ")
-    can = models.Cans.objects.get(name=canName, view_permission="public")
-    data['canContent'] = convert(can.content)
+    feedName = feedName.replace("+", " ")
+    feed = models.Feed.objects.get(name=feedName, view_permission="public")
+    data['feedContent'] = convert(feed.content)
     
     if request.method == "POST":
         # Save that consumer
@@ -40,11 +40,11 @@ def mobileGetCan(request, canName):
         if len(phone_devices) != 0:
             phone_device = phone_devices[0]
             consumer = phone_device.account
-            can.consumers.add(consumer)
+            feed.consumers.add(consumer)
         else:
             print "No phone with reg_id " + reg_id + " is found"
 
-    return render_to_response("mobileGetCan.html", data, context_instance=RequestContext(request))
+    return render_to_response("mobileGetFeed.html", data, context_instance=RequestContext(request))
 
 
 def gcmRegister(request):
@@ -112,6 +112,7 @@ def registerConsumer(request):
         print "New consumer account created: " + consumerEmail
 
     return HttpResponse("") 
+
 
 def convert(input):
     if isinstance(input, dict):

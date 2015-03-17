@@ -27,9 +27,9 @@ def editor(request):
     data = {}
     user = request.user
     data['user'] = user
-    cans = models.Cans.objects.filter(owner=user).order_by('id')
-    data['cansData'] = getCansData(cans)
-    data['sharedCans'] = models.Cans.objects.filter(Q(view_permission="public") and ~Q(owner=user)).order_by('id')
+    feeds = models.Feed.objects.filter(owner=user).order_by('id')
+    data['feedsData'] = getFeedData(feeds)
+    data['sharedFeed'] = models.Feed.objects.filter(Q(view_permission="public") and ~Q(owner=user)).order_by('id')
     return render_to_response("editor.html", data, context_instance=RequestContext(request))
 
 
@@ -38,32 +38,33 @@ def editorUpload(request):
     user = request.user
     decoded = json.loads(request.POST['json'],object_pairs_hook=OrderedDict)
 
-    for canData in decoded:
-        name = canData['can-name']
-        view_permission = canData.get('view-permission', "public")
-        content = json.dumps(canData)
+    for feedData in decoded:
+        name = feedData['feed-name']
+        view_permission = feedData.get('view-permission', "public")
+        content = json.dumps(feedData)
 
         try:
-            can = models.Cans.objects.get(name=name, owner=user)
-            can.content = content
-            can.view_permission = view_permission
-            can.save()
-            updateConsumers(can)
+            feed = models.Feed.objects.get(name=name, owner=user)
+            if feed.content != content:
+                feed.content = content
+                feed.view_permission = view_permission
+                feed.save()
+                updateConsumers(feed)
         except ObjectDoesNotExist:
-            new_can = models.Cans.objects.create(name=name, 
+            new_feed = models.Feed.objects.create(name=name, 
                                                  owner=user, 
                                                  content=content, 
                                                  view_permission=view_permission)
-            new_can.save()  
+            new_feed.save()  
     return HttpResponse(json.dumps(response_data), content_type="application-json")
 
 
-def sendCans(request):
+def sendFeed(request):
     response_data = {}
     user = request.user
     
     recipient = request.POST['recipient']
-    cansToSend = request.POST['cans']
+    feedsToSend = request.POST['feeds']
 
     if not validateEmail(recipient):
         response_data['result'] = 0;
@@ -71,9 +72,9 @@ def sendCans(request):
         response_data['result'] = 1;
 
     links = ""
-    for can in json.loads(cansToSend):
-        can = can.replace(" ", "%20")
-        links += "http://chelada-web.herokuapp.com/mobile/getcan/canname/%s\n\n" % (can)
+    for feed in json.loads(feedsToSend):
+        feed = feed.replace(" ", "%20")
+        links += "http://chelada-web.herokuapp.com/mobile/getfeed/feedname/%s\n\n" % (feed)
     subject = "%s is sharing Chelada feeds with you" % (user.first_name)
     message = """%s %s would like to share these Chelada Feeds with you: \n\n%s""" % (user.first_name, user.last_name, links)
     htmlmessage = "<html><body>%s</body></html>" % (message)
@@ -83,10 +84,10 @@ def sendCans(request):
     return HttpResponse(json.dumps(response_data), content_type="application-json")
 
 
-def getCansData(cans):
-    if len(cans) == 0:
+def getFeedData(feeds):
+    if len(feeds) == 0:
         return ""
-    return",".join(map(lambda x : x.content, cans))
+    return",".join(map(lambda x : x.content, feeds))
 
 
 def updateConsumers(feed):
@@ -114,19 +115,19 @@ def sendGCMMessage(reg_id, data):
 def browse(request):
     user = request.user
     data = {}
-    cans = models.Cans.objects.filter(view_permission="public").order_by('id')
+    feeds = models.Feed.objects.filter(view_permission="public").order_by('id')
 
     data['user'] = user
-    data['cans'] = cans
+    data['feeds'] = feeds
     return render_to_response("browse.html", data, context_instance=RequestContext(request))
 
 
 def browseLook(request, id):
     user = request.user
     data = {}
-    cans = models.Cans.objects.filter(id=id, view_permission="public").order_by('id')
+    feeds = models.Feed.objects.filter(id=id, view_permission="public").order_by('id')
 
     data['user'] = user
-    data['cans'] = cans
-    data['cansData'] = getCansData(cans)
+    data['feeds'] = feeds
+    data['feedsData'] = getFeedData(feeds)
     return render_to_response("browseLook.html", data, context_instance=RequestContext(request))

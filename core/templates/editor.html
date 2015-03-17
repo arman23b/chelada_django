@@ -2,7 +2,7 @@
 
 {% block body %}
 
-<div class="uk-modal" id='modal-new-can'>
+<div class="uk-modal" id='modal-new-feed'>
 	<div class="uk-modal-dialog">
 		<a class="uk-modal-close uk-close"></a>
 		<h1>New Feed</h1>
@@ -15,25 +15,25 @@
 			</div>
 		</div>
 		<div style="margin-top: 10px; text-align: right">
-			<button class="uk-button uk-button-primary submit" onclick="submitNewCan()" type="button">Done</button>
+			<button class="uk-button uk-button-primary submit" onclick="submitNewFeed()" type="button">Done</button>
 		</div>
 	</div>
 </div>
 
-<div class="uk-modal" id='modal-new-task'>
+<div class="uk-modal" id='modal-new-item'>
 	<div class="uk-modal-dialog">
 		<a class="uk-modal-close uk-close"></a>
-		<h1>New Task</h1>
+		<h1>New Item</h1>
 		<div class="uk-form uk-form-horizontal">
 			<div class="uk-form-row">
-				<label class="uk-form-label" for="form-h-it">Task Name</label>
+				<label class="uk-form-label" for="form-h-it">Item Name</label>
 				<div class="uk-form-controls">
 					<input type="text">
 				</div>
 			</div>
 		</div>
 		<div style="margin-top: 10px; text-align: right">
-			<button class="uk-button uk-button-primary submit" onclick="submitNewTask()" type="button">Done</button>
+			<button class="uk-button uk-button-primary submit" onclick="submitNewItem()" type="button">Done</button>
 		</div>
 	</div>
 </div>
@@ -60,7 +60,7 @@
 	</div>
 </div>
 
-<div class="uk-modal" id="modal-can-settings">
+<div class="uk-modal" id="modal-feed-settings">
 	<div class="uk-modal-dialog">
 		<a class="uk-modal-close uk-close"></a>
 		<h2>Settings</h2>
@@ -68,7 +68,7 @@
 			<div class="uk-form-row">
 				<label class="uk-form-label" for="form-h-it">Link to Feed icon</label>
 				<div class="uk-form-controls">
-					<input id="link-can-icon" />
+					<input id="link-feed-icon" />
 				</div>
 			</div>
 
@@ -76,8 +76,8 @@
 				<label class="uk-form-label" for="form-h-it">Viewing permission</label>
 				<div class="uk-form-controls">
 					<select id='viewing-permission'>
-						<option selected="selected" value="public">Public - Anyone can view in Public Feeds page</option>
-						<option value="private">Private - Anyone with a link can view</option>
+						<option selected="selected" value="public">Public - Anyone feed view in Public Feeds page</option>
+						<option value="private">Private - Anyone with a link feed view</option>
 					</select>
 				</div>
 			</div>
@@ -86,8 +86,8 @@
 				<label class="uk-form-label" for="form-h-it">Editing permission</label>
 				<div class="uk-form-controls">
 					<select id='editing-permission'>
-						<option value="owner">Only owner can edit</option>
-						<option value="listed">People with emails below can view and edit</option>
+						<option value="owner">Only owner feed edit</option>
+						<option value="listed">People with emails below feed view and edit</option>
 					</select>
 				</div>
 			</div>
@@ -105,19 +105,19 @@
 	</div>
 </div>
 
-<div class="uk-modal" id='modal-cans-export'>
+<div class="uk-modal" id='modal-feeds-export'>
 	<div class="uk-modal-dialog">
 		<a class="uk-modal-close uk-close"></a>
 		<h2>Choose Feeds to Export</h2>
-		<form id='cans-container-export'>
+		<form id='feeds-container-export'>
 		</form>
 		<div class="modal-btn-done">
-			<button class="uk-button uk-button-primary submit" onclick='exportCans();' type="button">Done</button>
+			<button class="uk-button uk-button-primary submit" onclick='exportFeeds();' type="button">Done</button>
 		</div>
 	</div>
 </div>
 
-<div class="uk-modal" id='modal-cans-link'>
+<div class="uk-modal" id='modal-feeds-link'>
 	<div class="uk-modal-dialog">
 		<a class="uk-modal-close uk-close"></a>
 		<h2>Choose Feeds to Send the Link</h2>
@@ -129,18 +129,18 @@
 				</div>
 			</div>
 		</div><br>
-		<form id='cans-container-link'>
+		<form id='feeds-container-link'>
 		</form>
 		<div class="modal-btn-done">
-			<button class="uk-button uk-button-primary submit" onclick='linkCans();' type="button">Done</button>
+			<button class="uk-button uk-button-primary submit" onclick='linkFeeds();' type="button">Done</button>
 		</div>
 	</div>
 </div>
 
-{% if cansData|length == 0 %}
-<label id='initial-cans-storage' class='gone'></label>
+{% if feedsData|length == 0 %}
+<label id='initial-feeds-storage' class='gone'></label>
 {% else %}
-<label id='initial-cans-storage' class='gone'>[{{ cansData | safe }}]</label>
+<label id='initial-feeds-storage' class='gone'>[{{ feedsData | safe }}]</label>
 {% endif %}
 
 <div id='header'>
@@ -149,13 +149,13 @@
 
 	<div id='nav-bar'>
 		<div id='nav-bar-content'>
-			<span id='new-can'><a href="#modal-new-can" data-uk-modal><img>Create a New Feed</a></span><span id='edit-cans' onclick="enterEditMode()"><a href='javascript:;'><img>Edit Feeds</a></span><span id='save-can' onclick="uploadChanges()"><a href='javascript:;'><img>Save All Feeds to Database</a></span><span id='task-name-caption'>Current Task</span><span id='active-task-name'></span>
+			<span id='new-feed'><a href="#modal-new-feed" data-uk-modal><img>Create a New Feed</a></span><span id='edit-feeds' onclick="enterEditMode()"><a href='javascript:;'><img>Edit Feeds</a></span><span id='save-feed' onclick="uploadChanges()"><a href='javascript:;'><img>Save All Feeds to Database</a></span><span id='item-name-caption'>Current Item</span><span id='active-item-name'></span>
 			<span id='share'>
 				<a href='javascript:;'><img>Share</a>
 				<ul>
-					<li id='share-export'><a href='#modal-cans-export' onclick="chooseCansToExport();" data-uk-modal>Export JSON File</a></li>
+					<li id='share-export'><a href='#modal-feeds-export' onclick="chooseFeedsToExport();" data-uk-modal>Export JSON File</a></li>
 					<!-- <li id='share-email'><a href='javascript:;'>Email</a></li> -->
-					<li id='share-link'><a href='#modal-cans-link' onclick="chooseCansToLink();" data-uk-modal>Email Links</a></li>
+					<li id='share-link'><a href='#modal-feeds-link' onclick="chooseFeedsToLink();" data-uk-modal>Email Links</a></li>
 				</ul>
 			</span>
 			<span id='import-json'><a href='#modal-paste-json' data-uk-modal><img>Import Chelada JSON</a></span>
@@ -163,29 +163,29 @@
 	</div>		
 </div>
 
-{% if cansData|length == 0 %}
-<div id='welcome-title'>To start, create a new Feed and a Task in that Feed</div>
+{% if feedsData|length == 0 %}
+<div id='welcome-title'>To start, create a new Feed and a Item in that Feed</div>
 {% endif %}
 
 <div id='editor'>
-	<div id='cans-browser'>
-		<div id='managing-cans'>
+	<div id='feeds-browser'>
+		<div id='managing-feeds'>
 			<div>Feeds shared with you</div>
 			<ul>
-				{% for sharedCan in sharedCans %}
-				<li class='shared-can'><a href="/browse/{{ sharedCan.id }}"> {{ sharedCan.name }} </a></li>
+				{% for sharedFeed in sharedFeeds %}
+				<li class='shared-feed'><a href="/browse/{{ sharedFeed.id }}"> {{ sharedFeed.name }} </a></li>
 				{% endfor %}
 			</ul>
 		</div>
 	</div>
 
-	<div id='triggers'></div>
+	<div id='rules'></div>
 </div>
 
 {% endblock %}
 
 {% block end %}
 <script src="/static/javascript/editor.js"></script>
-<script src="/static/javascript/triggers.js"></script>
+<script src="/static/javascript/rules.js"></script>
 <script src="/static/uikit/js/uikit.min.js"></script>
 {% endblock %}

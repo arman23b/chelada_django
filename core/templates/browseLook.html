@@ -9,18 +9,18 @@
 
 <div id='shade'></div>
 
-<label id='initial-cans-storage' class='gone'>[{{ cansData | safe }}]</label>
+<label id='initial-feeds-storage' class='gone'>[{{ feedsData | safe }}]</label>
 
 <div id='editor'>
-	<div id='cans-browser'>
+	<div id='feeds-browser'>
 	</div>
 
-	<div id='triggers'></div>
+	<div id='rules'></div>
 </div>
 
 {% endblock %}
 
 {% block end %}
 	<script src="/static/javascript/browse.js"></script>
-	<script src="/static/javascript/triggers.js"></script>
+	<script src="/static/javascript/rules.js"></script>
 {% endblock %}

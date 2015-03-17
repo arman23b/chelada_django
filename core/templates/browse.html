@@ -8,10 +8,10 @@
 </div>
 
 <div id='editor'>
-	{% if cans|length != 0 %}
-	<div id='public-cans'>
-		{% for can in cans %}
-		<div><a href='/browse/{{ can.id }}'> {{ can.name }} </a></div>
+	{% if feeds|length != 0 %}
+	<div id='public-feeds'>
+		{% for feed in feeds %}
+		<div><a href='/browse/{{ feed.id }}'> {{ feed.name }} </a></div>
 		{% endfor %}
 	</div>
 	{% endif %}

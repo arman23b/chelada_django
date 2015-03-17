@@ -2,34 +2,34 @@
 
 JSON export format:
 [
-	{'can-name' : 'can1',
-	 'tasks' : [
-					{'task-name' : 'task-1-1',
-					 'triggers' : [
+	{'feed-name' : 'feed1',
+	 'items' : [
+					{'item-name' : 'item-1-1',
+					 'rules' : [
 									....
 					 			  ]
 					}
 	 		   ]
 	},
 
-	{'can-name' : 'can2',
+	{'feed-name' : 'feed2',
 		....
 	}
 ]
 
 NEED A REVERT TO ORIGINAL STATE BUTTON
 
-Names of Can must be unique universally;
-Names of Task must be unique within that Can
+Names of Feed must be unique universally;
+Names of Item must be unique within that Feed
 
-Until user chooses Save Can to upload Can data to server, all Can changes only happen locally.
-So every change to any Trigger or Task will be saved locally, but not on the server side.
+Until user chooses Save Feed to upload Feed data to server, all Feed changes only happen locally.
+So every change to any Rule or Item will be saved locally, but not on the server side.
 
-In export: choose the cans/tasks you would like to export
+In export: choose the feeds/items you would like to export
  */
 
-activeCan = null;
-activeTask = null;
+activeFeed = null;
+activeItem = null;
 
 function showDialog(dialogObj) {
 	hideMenus();
@@ -41,7 +41,7 @@ function showDialog(dialogObj) {
 }
 
 $(document).ready(function() {
-	$('#title-bar, #nav-bar-content > :not(#can-selector), #editor, #footer').click(function () {
+	$('#title-bar, #nav-bar-content > :not(#feed-selector), #editor, #footer').click(function () {
 		hideMenus();
 		/* Remove the .visible class of all such classes */
 
@@ -66,11 +66,11 @@ function hideModalDialog() {
 	$('#shade').css({'visibility': 'hidden', 'opacity': 0});
 	$('.dialog').css({'visibility': 'hidden', 'opacity': 0});
 
-	$('#cans-browser').removeClass('lifted');
-	$('img.edit, img.can-delete').css({'visibility' : 'hidden'});
+	$('#feeds-browser').removeClass('lifted');
+	$('img.edit, img.feed-delete').css({'visibility' : 'hidden'});
 	$('img.settings').removeClass('gone');
 
-	attachNewTaskHandler();
+	attachNewItemHandler();
 }
 
 function toast(msg, status) {
