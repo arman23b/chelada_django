@@ -161,7 +161,13 @@ function enterEditMode() {
 
 function submitNewFeed() {
     var feedName = $.trim($('#modal-new-feed input').val());
-    if (doesFeedExist(feedName) == true) {
+    if (feedName.indexOf("@") > -1) {
+        toastr.warning("A Feed name can't contain @ character");
+    }
+    else if (feedName.indexOf("/") > -1) {
+        toastr.warning("A Feed name can't contain / character");
+    }
+    else if (doesFeedExist(feedName) == true) {
         toastr.warning('A Feed name must be unique.');
     }
     else {

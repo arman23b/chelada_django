@@ -38,9 +38,10 @@ def editorUpload(request):
     decoded = json.loads(request.POST['json'],object_pairs_hook=OrderedDict)
 
     for feedData in decoded:
-        name = feedData['feed-name']
-        view_permission = feedData.get('view-permission', "public")
-        content = json.dumps(feedData)
+        feedDataWithModifiedName = modifyFeedName(feedData, user)
+        name = feedDataWithModifiedName['feed-name']
+        view_permission = feedDataWithModifiedName.get('view-permission', "public")
+        content = json.dumps(feedDataWithModifiedName)
 
         try:
             feed = models.Feed.objects.get(name=name, owner=user)
@@ -51,11 +52,19 @@ def editorUpload(request):
                 updateConsumers(feed)
         except ObjectDoesNotExist:
             new_feed = models.Feed.objects.create(name=name, 
-                                                 owner=user, 
-                                                 content=content, 
-                                                 view_permission=view_permission)
+                                                  owner=user, 
+                                                  content=content, 
+                                                  view_permission=view_permission)
             new_feed.save()  
     return HttpResponse(json.dumps(response_data), content_type="application-json")
+
+
+def modifyFeedName(feedData, user):
+    if user.first_name != "":
+        feedData["feed-name"] = "@%s/%s" % (user.first_name, feedData["feed-name"])
+    else:
+        feedData["feed-name"] = "@%s/%s" % (user.username, feedData["feed-name"])
+    return feedData
 
 
 def sendFeed(request):
@@ -86,7 +95,12 @@ def sendFeed(request):
 def getFeedData(feeds):
     if len(feeds) == 0:
         return ""
-    return",".join(map(lambda x : x.content, feeds))
+    for feed in feeds:
+        feedDict = json.loads(feed.content)
+        feedName = feedDict["feed-name"]
+        feedDict["feed-name"] = feedName[feedName.index("/")+1 :]
+        feed.content = json.dumps(feedDict)
+    return ",".join(map(lambda x : x.content, feeds))
 
 
 def updateConsumers(feed):
