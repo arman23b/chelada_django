@@ -137,6 +137,17 @@ function appendIfOptions(name, choosespan, statNum, $this, disabled) {
 
             break;
 
+        case 'Expiration Date':
+            var today = new Date();
+            /* Default the date to today */
+            var strToday = pad(today.getMonth() + 1, 2) + "/" + pad(today.getDate(), 2) + "/" + today.getFullYear();
+            var timeRel = appendOpt(optionsspan, ["On", "Before", "After"], statNum, 'time-rel');
+            var objDate = appendEdit(optionsspan, strToday, statNum, 'expirationDate');
+            objSmoothIn([timeRel, objDate], disabled);
+            objDate.find('label').attr('data-uk-datepicker', "{format:'MM/DD/YYYY'}");
+
+            break;
+
         case 'Weather':
             objSmoothIn([appendOpt(optionsspan, ["Is", "Is not"], statNum, 'is-not'),
                 appendOpt(optionsspan, ["Clear", "Scattered clouds", "Overcast", "Windy", "Drizzle", "Rain", "Thunderstorm", "Fog", "Hail", "Snow"], statNum, 'weather')], disabled);
@@ -452,7 +463,7 @@ function deleteBlock($this, statNum) { // Why can't use 'this?'
 }
 
 function fillInOptions(statNum) {
-    $("#stat" + statNum + " .block:last .choose").append(genUlLi(["Location", "Time", "Day", "Date", "Weather", "Temperature", "Acceleration", "Illuminance", "Pressure", "Time since last execution", "Times executed"]));
+    $("#stat" + statNum + " .block:last .choose").append(genUlLi(["Location", "Time", "Day", "Date", "Expiration Date", "Weather", "Temperature", "Acceleration", "Illuminance", "Pressure", "Time since last execution", "Times executed"]));
 }
 
 function addlineHandler() {
@@ -609,6 +620,10 @@ function getJSONFromRules() {
 
                     case 'Date':
                         storeOptionsData(thisBlock, options, ['time-rel', 'date']);
+                        break;
+
+                    case 'Expiration Date':
+                        storeOptionsData(thisBlock, options, ['time-rel', 'expirationDate']);
                         break;
 
                     case 'Weather':
