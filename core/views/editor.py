@@ -14,7 +14,6 @@ from django.core.mail import send_mail
 from collections import OrderedDict
 
 import json, unicodedata, urllib2
-from passlib.hash import pbkdf2_sha256
 
 
 def index(request):

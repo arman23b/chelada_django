@@ -15,7 +15,6 @@ from django.core.mail import send_mail
 from collections import OrderedDict
 
 import json, unicodedata, urllib2
-from passlib.hash import pbkdf2_sha256
 
 
 def producerSend(request):
@@ -39,7 +38,7 @@ def producerSend(request):
                                                       content=content, 
                                                       view_permission="public") 
                 try:
-                    consumer = models.ConsumerAccount.objects.get(email=consumerUsername)
+                    consumer = models.User.objects.get(username=consumerUsername)
                     new_feed.consumers.add(consumer)
                     new_feed.save()
                     updateConsumers(new_feed)

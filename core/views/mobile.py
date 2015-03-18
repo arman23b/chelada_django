@@ -14,7 +14,6 @@ from django.core.mail import send_mail
 from collections import OrderedDict
 
 import json, unicodedata, urllib2
-from passlib.hash import pbkdf2_sha256
 
 
 def mobileListFeeds(request):
@@ -59,18 +58,17 @@ def gcmRegister(request):
         existing_phones = models.PhoneDevice.objects.filter(reg_id=reg_id)
         if len(existing_phones) == 0:
             # Check if consumer account for email exists
-            users = models.ConsumerAccount.objects.filter(email=email)
-            if len(users) == 0:
-                consumer_account = models.ConsumerAccount.objects.create(email=email)
-                consumer_account.save()
+            try:
+                consumer = models.User.objects.get(username=email)
+            except ObjectDoesNotExist:
+                consumer = models.User.objects.create(username=email)
+                consumer.save()
                 print "New consumer account created"
-            else:
-                consumer_account = users[0]
 
             new_phone_device = models.PhoneDevice.objects.create(name=name, 
                                                                  reg_id=reg_id, 
                                                                  dev_id=dev_id, 
-                                                                 account=consumer_account)
+                                                                 account=consumer)
             new_phone_device.save()
             print "New device registered"
 
@@ -80,15 +78,14 @@ def gcmRegister(request):
 def loginConsumer(request):
     if request.method == "POST":
         data = json.loads(request.body)
-        consumerEmail = data["email"]
-        consumerPassword = data["password"]
-
+        email = data["email"]
+        password = data["password"]
         response_data = {}
 
-        print "Consumer " + consumerEmail + " tries to login"
+        print "Consumer " + email + " tries to login"
         try:
-            consumer = models.ConsumerAccount.objects.get(email=consumerEmail)
-            if pbkdf2_sha256.verify(consumerPassword, consumer.passwordHash):
+            consumer = models.user.objects.get(username=email)
+            if consumer.check_password(password):
                 response_data["result"] = "OK"
             else:
                 response_data["result"] = "DENY"
@@ -96,20 +93,18 @@ def loginConsumer(request):
             response_data["result"] = "NOUSER"
 
         print "Login result: " + response_data["result"] 
-
         return HttpResponse(json.dumps(response_data), content_type="application-json")
 
 
 def registerConsumer(request):
     if request.method == "POST":
         data = json.loads(request.body)
-        consumerEmail = data["email"]
-        consumerPasswordHash = pbkdf2_sha256.encrypt(data["password"] , rounds=200000, salt_size=16)
-
-        consumer_account = models.ConsumerAccount.objects.create(email=consumerEmail,
-                                                                 passwordHash=consumerPasswordHash)
-        consumer_account.save()
-        print "New consumer account created: " + consumerEmail
+        email = data["email"]
+        password = data["password"]
+        consumer = models.User.objects.create(username=email,
+                                              password=password)
+        consumer.save()
+        print "New consumer created: " + email
 
     return HttpResponse("") 
 
