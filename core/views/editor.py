@@ -2,6 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.conf import settings
 from django.contrib.auth import models, authenticate, login, logout
 from core import models
+from util import *
 from django.shortcuts import get_object_or_404, render_to_response, redirect
 from django.template import RequestContext
 
@@ -38,10 +39,10 @@ def editorUpload(request):
     decoded = json.loads(request.POST['json'],object_pairs_hook=OrderedDict)
 
     for feedData in decoded:
-        feedDataWithModifiedName = modifyFeedName(feedData, user)
-        name = feedDataWithModifiedName['feed-name']
-        view_permission = feedDataWithModifiedName.get('view-permission', "public")
-        content = json.dumps(feedDataWithModifiedName)
+        feedData["feed-name"] = modifyFeedName(feedData["feed-name"], user)
+        name = feedData['feed-name']
+        view_permission = feedData.get('view-permission', "public")
+        content = json.dumps(feedData)
 
         try:
             feed = models.Feed.objects.get(name=name, owner=user)
@@ -59,15 +60,7 @@ def editorUpload(request):
     return HttpResponse(json.dumps(response_data), content_type="application-json")
 
 
-def modifyFeedName(feedData, user):
-    if user.first_name != "":
-        feedData["feed-name"] = "@%s/%s" % (user.first_name, feedData["feed-name"])
-    else:
-        feedData["feed-name"] = "@%s/%s" % (user.username, feedData["feed-name"])
-    return feedData
-
-
-def sendFeed(request):
+def sendFeeds(request):
     response_data = {}
     user = request.user
     
@@ -82,6 +75,7 @@ def sendFeed(request):
     links = ""
     for feed in json.loads(feedsToSend):
         feed = feed.replace(" ", "%20")
+        feed = modifyFeedName(feed, user)
         links += "http://chelada-web.herokuapp.com/mobile/getfeed/feedname/%s\n\n" % (feed)
     subject = "%s is sharing Chelada feeds with you" % (user.first_name)
     message = """%s %s would like to share these Chelada Feeds with you: \n\n%s""" % (user.first_name, user.last_name, links)
@@ -90,39 +84,6 @@ def sendFeed(request):
     send_mail(subject, message, 'Chelada Team', [recipient])
 
     return HttpResponse(json.dumps(response_data), content_type="application-json")
-
-
-def getFeedData(feeds):
-    if len(feeds) == 0:
-        return ""
-    for feed in feeds:
-        feedDict = json.loads(feed.content)
-        feedName = feedDict["feed-name"]
-        feedDict["feed-name"] = feedName[feedName.index("/")+1 :]
-        feed.content = json.dumps(feedDict)
-    return ",".join(map(lambda x : x.content, feeds))
-
-
-def updateConsumers(feed):
-    for consumer in feed.consumers.all():
-        print "Feed " + feed.name + " : updating consumers"
-        phone_device = consumer.phonedevice_set.all()[0]
-        sendGCMMessage(phone_device.reg_id, {"feed" : feed.content})
-
-
-def sendGCMMessage(reg_id, data):
-    url = "https://android.googleapis.com/gcm/send"
-    opener = urllib2.build_opener(urllib2.HTTPHandler)
-    message = {"data" : data, "registration_ids" : [reg_id]}
-    request = urllib2.Request(url, data=json.dumps(message))
-    request.add_header("Content-Type", "application/json")
-    request.add_header("Authorization", "key="+settings.GCM_APIKEY)
-    result = opener.open(request)
-    if result.getcode() == 200:
-        print "Successfully sent GCM message: " + str(data) + " to " + reg_id
-        print result.read()
-        return True
-    return False
 
 
 def browse(request):
@@ -143,4 +104,4 @@ def browseLook(request, id):
     data['user'] = user
     data['feeds'] = feeds
     data['feedsData'] = getFeedData(feeds)
-    return render_to_response("browseLook.html", data, context_instance=RequestContext(request))
+    return render_to_response("browseLook.html", data, context_instance=RequestContext(request))   

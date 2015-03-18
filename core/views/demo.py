@@ -5,6 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.conf import settings
 from django.contrib.auth import models, authenticate, login, logout
 from core import models
+from util import *
 from django.shortcuts import get_object_or_404, render_to_response, redirect
 from django.template import RequestContext
 

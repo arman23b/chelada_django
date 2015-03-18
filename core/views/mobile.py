@@ -2,6 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.conf import settings
 from django.contrib.auth import models, authenticate, login, logout
 from core import models
+from util import *
 from django.shortcuts import get_object_or_404, render_to_response, redirect
 from django.template import RequestContext
 
@@ -107,14 +108,3 @@ def registerConsumer(request):
         print "New consumer created: " + email
 
     return HttpResponse("") 
-
-
-def convert(input):
-    if isinstance(input, dict):
-        return {convert(key): convert(value) for key, value in input.iteritems()}
-    elif isinstance(input, list):
-        return [convert(element) for element in input]
-    elif isinstance(input, unicode):
-        return input.encode('utf-8')
-    else:
-        return input

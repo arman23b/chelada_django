@@ -2,6 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.conf import settings
 from django.contrib.auth import models, authenticate, login, logout
 from core import models
+from util import *
 from django.shortcuts import get_object_or_404, render_to_response, redirect
 from django.template import RequestContext
 
@@ -65,15 +66,3 @@ def registerUser(request):
         login(request, new_user)
         response_data['result'] = 0
     return HttpResponse(json.dumps(response_data), content_type="application-json")
-
-
-def authUser(email, password):
-    return authenticate(username=email, password=password)
-
-
-def validateEmail(email):
-    try:
-        validate_email(email)
-        return True
-    except ValidationError:
-        return False

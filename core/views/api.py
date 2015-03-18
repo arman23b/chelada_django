@@ -2,6 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.conf import settings
 from django.contrib.auth import models, authenticate, login, logout
 from core import models
+from util import *
 from django.shortcuts import get_object_or_404, render_to_response, redirect
 from django.http import Http404
 from django.template import RequestContext
@@ -58,25 +59,3 @@ def producerSend(request):
         except ObjectDoesNotExist:
             print "Username %s doesn't exist" % producerUsername
             return Http404("Username not found")
-
-
-def updateConsumers(feed):
-    for consumer in feed.consumers.all():
-        print "Feed " + feed.name + " : updating consumers"
-        phone_device = consumer.phonedevice_set.all()[0]
-        sendGCMMessage(phone_device.reg_id, {"feed" : feed.content})
-
-
-def sendGCMMessage(reg_id, data):
-    url = "https://android.googleapis.com/gcm/send"
-    opener = urllib2.build_opener(urllib2.HTTPHandler)
-    message = {"data" : data, "registration_ids" : [reg_id]}
-    request = urllib2.Request(url, data=json.dumps(message))
-    request.add_header("Content-Type", "application/json")
-    request.add_header("Authorization", "key="+settings.GCM_APIKEY)
-    result = opener.open(request)
-    if result.getcode() == 200:
-        print "Successfully sent GCM message: " + str(data) + " to " + reg_id
-        print result.read()
-        return True
-    return False
