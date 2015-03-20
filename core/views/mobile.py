@@ -62,7 +62,7 @@ def gcmRegister(request):
             try:
                 consumer = models.User.objects.get(username=email)
             except ObjectDoesNotExist:
-                consumer = models.User.objects.create(username=email)
+                consumer = models.User.objects.create_user(username=email)
                 consumer.save()
                 print "New consumer account created"
 
@@ -85,7 +85,8 @@ def loginConsumer(request):
 
         print "Consumer " + email + " tries to login"
         try:
-            consumer = models.user.objects.get(username=email)
+            consumer = models.User.objects.get(username=email)
+            print password
             if consumer.check_password(password):
                 response_data["result"] = "OK"
             else:
@@ -102,9 +103,32 @@ def registerConsumer(request):
         data = json.loads(request.body)
         email = data["email"]
         password = data["password"]
-        consumer = models.User.objects.create(username=email,
-                                              password=password)
+        consumer = models.User.objects.create_user(username=email,
+                                                   password=password)
         consumer.save()
         print "New consumer created: " + email
 
-    return HttpResponse("") 
+    return HttpResponse("")
+
+
+def unsubscribe(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        email = data["email"]
+        feedName = data["feed-name"]
+        try:
+            consumer = models.User.objects.get(username=email)
+        except ObjectDoesNotExist:
+            print "User %s doesn't exist" % email
+        try:
+            feed = models.Feed.objects.get(name=feedName)
+            if consumer in feed.consumers.all():
+                feed.consumers.remove(consumer)
+                feed.save()
+                print "User %s successfully unsubscribed from feed %s" % (consumer.username, feedName)
+            else:
+                print "User %s is not subscribed to feed %s" % (consumer.username, feedName)
+        except ObjectDoesNotExist:
+            print "Feed %s doesn't exist" % feedName
+
+    return HttpResponse("")
