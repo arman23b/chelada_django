@@ -51,8 +51,8 @@ def validateEmail(email):
 
 def updateConsumers(feed):
     noPastItemsContent = deletePastItems(feed.content, feed.name)
+    print "Feed " + feed.name + " : updating consumers " + ",".join(map(lambda x: x.username, feed.consumers.all()))
     for consumer in feed.consumers.all():
-        print "Feed " + feed.name + " : updating consumers"
         phone_device = consumer.phonedevice_set.all()[0]
         sendGCMMessage(phone_device.reg_id, {"feed" : noPastItemsContent})
 
@@ -92,7 +92,6 @@ def sendGCMMessage(reg_id, data):
     request.add_header("Authorization", "key="+settings.GCM_APIKEY)
     result = opener.open(request)
     if result.getcode() == 200:
-        print "Successfully sent GCM message: " + str(data) + " to " + reg_id
         print result.read()
         return True
     return False

@@ -42,7 +42,7 @@ def editorUpload(request):
         feedData["feed-name"] = modifyFeedName(feedData["feed-name"], user)
         name = feedData['feed-name']
         view_permission = feedData.get('view-permission', "public")
-        content = json.dumps(feedData)
+        content = json.dumps(feedData, sort_keys=True)
 
         try:
             feed = models.Feed.objects.get(name=name, owner=user)
