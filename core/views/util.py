@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 
-import json, urllib2
+import json, urllib2, datetime
 
 
 def convert(input):
@@ -50,10 +50,37 @@ def validateEmail(email):
 
 
 def updateConsumers(feed):
+    noPastItemsContent = deletePastItems(feed.content, feed.name)
     for consumer in feed.consumers.all():
         print "Feed " + feed.name + " : updating consumers"
         phone_device = consumer.phonedevice_set.all()[0]
-        sendGCMMessage(phone_device.reg_id, {"feed" : feed.content})
+        sendGCMMessage(phone_device.reg_id, {"feed" : noPastItemsContent})
+
+
+def deletePastItems(content, name):
+    contentDict = json.loads(content)
+    items = contentDict["items"]
+    for item in items:
+        if hasExpired(item["rules"]):
+            print "Feed %s: item %s: deleting past content" % (name, item["item-name"])
+            items.remove(item)   
+    contentDict["items"] = items
+    return json.dumps(contentDict)
+
+
+def hasExpired(rules):
+    for rule in rules:
+        for condition in rule["if"]:
+            if "expirationDate" in condition and isPastDate(condition["expirationDate"]):
+                return True
+    return False
+
+
+def isPastDate(dateString):
+    dateList = dateString.split("/")
+    date = datetime.date(year=int(dateList[2]), month=int(dateList[0]), day=int(dateList[1]))
+    todaysDate = datetime.datetime.today().date()
+    return date < todaysDate
 
 
 def sendGCMMessage(reg_id, data):
