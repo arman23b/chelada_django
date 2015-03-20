@@ -222,7 +222,7 @@ function addThenButtonHandler(statNum) {
 function addThenSection($thenButton, statNum, disableAnimation) {
     var parentBlock = $thenButton.parents('.block');
     $thenButton.remove();
-    parentBlock.find('.andif').css({'display' : 'none'}); // Don't delete; may revert later
+    // parentBlock.find('.andif').css({'display' : 'none'}); // Don't delete; may revert later
 
     parentBlock.append("<div id='thenblocks'><table>" + initialThenBlocks + "</table></div>");
 
