@@ -64,6 +64,7 @@ def deletePastItems(content, name):
     for item in items:
         if hasExpired(item["rules"]):
             # print "Feed %s: item %s: deleting past content" % (name, item["item-name"])
+            pass
         else:
             print "Feed %s: item: %s: sending" % (name, item["item-name"])
             updatedItems.append(item)
