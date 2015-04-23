@@ -60,11 +60,14 @@ def updateConsumers(feed):
 def deletePastItems(content, name):
     contentDict = json.loads(content)
     items = contentDict["items"]
+    updatedItems = []
     for item in items:
         if hasExpired(item["rules"]):
-            print "Feed %s: item %s: deleting past content" % (name, item["item-name"])
-            items.remove(item)   
-    contentDict["items"] = items
+            # print "Feed %s: item %s: deleting past content" % (name, item["item-name"])
+        else:
+            print "Feed %s: item: %s: sending" % (name, item["item-name"])
+            updatedItems.append(item)
+    contentDict["items"] = updatedItems
     return json.dumps(contentDict)
 
 

@@ -50,7 +50,7 @@ def mobileGetFeed(request, feedName):
 def gcmRegister(request):
     if request.method == "POST":
         data = json.loads(request.body)
-        print "Received from phone device: " + str(data)
+        print "GCM Register from device: " + str(data)
         name = data["name"]
         email = data["email"]
         reg_id = data["reg_id"]
@@ -64,7 +64,7 @@ def gcmRegister(request):
             except ObjectDoesNotExist:
                 consumer = models.User.objects.create_user(username=email)
                 consumer.save()
-                print "New consumer account created"
+                print "New consumer account created for " + email
 
             new_phone_device = models.PhoneDevice.objects.create(name=name, 
                                                                  reg_id=reg_id, 
@@ -102,6 +102,7 @@ def registerConsumer(request):
     if request.method == "POST":
         data = json.loads(request.body)
         email = data["email"]
+        print "Consumer " + email + " tries to register"
         password = data["password"]
         consumer = models.User.objects.create_user(username=email,
                                                    password=password)
