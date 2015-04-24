@@ -117,8 +117,10 @@ function appendIfOptions(name, choosespan, statNum, $this, disabled) {
             /* Default time to now */
             var today = new Date();
             var strTime = pad(today.getHours(), 2) + ":" + pad(today.getMinutes(), 2);
-            objSmoothIn([appendOpt(optionsspan, ["On", "Before", "After"], statNum, 'time-rel'),
-                appendEdit(optionsspan, strTime, statNum, 'time')], disabled);
+            var timeRel = appendOpt(optionsspan, ["On", "Before", "After"], statNum, 'time-rel');
+            var objDate = appendEdit(optionsspan, strTime, statNum, 'time');
+            objSmoothIn([timeRel, objDate], disabled);
+            objDate.find('label').attr('data-uk-timepicker', "{format:'24h'}");
             break;
 
         case 'Day':
