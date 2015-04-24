@@ -38,6 +38,11 @@ def editorUpload(request):
     user = request.user
     decoded = json.loads(request.POST['json'],object_pairs_hook=OrderedDict)
 
+    toDelete = {}
+    for feed in models.Feed.objects.filter(owner=user):
+        # Mark feed to delete by default
+        toDelete[feed] = True
+
     for feedData in decoded:
         feedData["feed-name"] = modifyFeedName(feedData["feed-name"], user)
         name = feedData['feed-name']
@@ -51,12 +56,20 @@ def editorUpload(request):
                 feed.view_permission = view_permission
                 feed.save()
                 updateConsumers(feed)
+            # Mark feed in order not to delete
+            toDelete[feed] = False
         except ObjectDoesNotExist:
             new_feed = models.Feed.objects.create(name=name, 
                                                   owner=user, 
                                                   content=content, 
                                                   view_permission=view_permission)
-            new_feed.save()  
+            new_feed.save()
+
+    # Delete feeds
+    for feed, delete in toDelete.iteritems():
+        if delete:
+            feed.delete()
+
     return HttpResponse(json.dumps(response_data), content_type="application-json")
 
 
